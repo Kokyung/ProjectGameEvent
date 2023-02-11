@@ -6,44 +6,29 @@ using UnityEngine;
 
 namespace BKK.GameEventArchitecture
 {
-    [CreateAssetMenu(menuName = "BKK/Game Event Architecture/Description Option", fileName = "GameEventDescriptionOption", order = 1000)]
-    public class GameEventDescriptionOption : ScriptableObject
+    public class GameEventDescriptionOption
     {
-        public int fontSize = 15;
+        public static string fontSize = "GameEventDescription_FontSize";
 
-        public bool locked = true;
+        public static string locked = "GameEventDescription_Locked";
 
-        public int typingAreaHeight = 12;
+        public static string typingAreaHeight = "GameEventDescription_TypingAreaHeight";
 
-        [MenuItem("BKK/게임 이벤트/게임 이벤트 설명 옵션", priority = 1)]
-        public static void ShowAsset()
+        [InitializeOnLoadMethod]
+        private static void Init()
         {
-            var assetGUIDList = AssetDatabase.FindAssets("t:GameEventDescriptionOption", null);
-
-            if (assetGUIDList.Length > 0)
+            if (!EditorPrefs.HasKey(fontSize))
             {
-                Debug.Log("설명 옵션이 이미 존재합니다.");
-                var path = AssetDatabase.GUIDToAssetPath(assetGUIDList[0]);
-                var asset = AssetDatabase.LoadMainAssetAtPath(path);
-                EditorGUIUtility.PingObject(asset);
-                AssetDatabase.OpenAsset(asset);
+                EditorPrefs.SetInt(fontSize, 15);
             }
-            else
+            if (!EditorPrefs.HasKey(locked))
             {
-                CreateAsset();
+                EditorPrefs.SetBool(locked, true);
             }
-        }
-
-        public static void CreateAsset()
-        {
-            var path = UnityEditor.EditorUtility.SaveFilePanelInProject("설명 옵션 파일 저장", "GameEventDescriptionOption", "asset", "");
-            if (path.Equals(string.Empty)) return;
-
-            GameEventDescriptionOption asset = ScriptableObject.CreateInstance<GameEventDescriptionOption>();
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            EditorGUIUtility.PingObject(asset);
-            AssetDatabase.OpenAsset(asset);
+            if (!EditorPrefs.HasKey(typingAreaHeight))
+            {
+                EditorPrefs.SetInt(typingAreaHeight, 12);
+            }
         }
     }
 }

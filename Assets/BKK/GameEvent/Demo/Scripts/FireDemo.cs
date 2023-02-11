@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BKK.GameEventArchitecture;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace BKK
 {
-    public class Demo : MonoBehaviour
+    public class FireDemo : MonoBehaviour
     {
         public ParticleSystem first;
         public ParticleSystem last;
@@ -18,7 +19,7 @@ namespace BKK
 
         private bool startDelayed = false;
         private bool endDelayed = false;
-        
+
         private void Awake()
         {
             if (button != null) button.onClick.AddListener(Boom);

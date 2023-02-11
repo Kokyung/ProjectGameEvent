@@ -5,7 +5,7 @@
 
 * 현재 할 것
   - 커스텀 타입 게임 이벤트도 매니저 윈도우에 뜨도록 수정
-  - GameEventDescriptionOption을 없애고 EditorPrefs 방식으로 바꿀 것
+~~- GameEventDescriptionOption을 없애고 EditorPrefs 방식으로 바꿀 것~~
   - 게임 이벤트 시간 타이밍 GUI화
   - 한국어 텍스트 전부 영문으로 전환
   - 언어 영어 한국어 변경 가능하게(시간 나면)
