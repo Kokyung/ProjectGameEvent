@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.bkk.gameevent": {
+      "version": "file:GameEvent",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "1.15.17",
       "depth": 0,

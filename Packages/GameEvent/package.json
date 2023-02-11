@@ -1,0 +1,22 @@
+{
+  "name": "com.bkk.gameevent",
+  "version": "1.0.0",
+  "displayName": "Game Event",
+  "description": "Game Event is Unity Event Management Solution without worry about script dependencies.",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "keywords": [
+    "keyword1",
+    "keyword2",
+    "keyword3"
+  ],
+  "author": {
+    "name": "Unity",
+    "email": "unity@example.com",
+    "url": "https://www.unity3d.com"
+  },
+  "type": "tool"
+}
