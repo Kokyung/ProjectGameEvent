@@ -53,6 +53,7 @@ namespace BKK.GameEventArchitecture.Editor
                 outfile.WriteLine("    {");
                 outfile.WriteLine("    }");
                 outfile.WriteLine("}");
+                outfile.Close();
             }
             else
             {
