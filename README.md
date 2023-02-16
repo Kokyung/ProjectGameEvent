@@ -10,7 +10,3 @@
   - 게임 이벤트 시간 타이밍 GUI화
   - 디버그 로그 On Off 기능 작성
   - 커스텀 타입 게임 이벤트도 매니저 윈도우에 뜨도록 수정
-  - 패키지 매니페스트 작성
-~~- GameEventDescriptionOption을 없애고 EditorPrefs 방식으로 바꿀 것~~
-
-
