@@ -24,8 +24,10 @@ namespace BKK.GameEventArchitecture.Editor
                     var fieldType = field.FieldType;
                     if (fieldType.IsAssignableFrom(typeof(GameEvent)))
                     {
+                        Handles.color = GameEventEditorProperty.handleColor;
+                        Handles.Label(listener.transform.position, $"{listener.name}\n{type.Name}");
                         Handles.DrawDottedLine(listener.transform.position, behaviour.transform.position, 3);
-                        
+                        Handles.Label(behaviour.transform.position, $"{behaviour.name}\n{fieldType.Name}");
                         break;
                     }
                 }
@@ -60,13 +62,19 @@ namespace BKK.GameEventArchitecture.Editor
 
                     if (fieldType == targetArgs[1])
                     {
+                        Handles.color = GameEventEditorProperty.handleColor;
+                        Handles.Label(listener.transform.position, $"{listener.name}\n{targetType.Name}");
                         Handles.DrawDottedLine(listener.transform.position, behaviour.transform.position, 3);
+                        Handles.Label(behaviour.transform.position, $"{behaviour.name}\n{fieldType.Name}");
                         break;
                     }
                 }
             }
         }
-        
-        
+    }
+
+    public static class GameEventEditorProperty
+    {
+        public static Color handleColor = new Color(0.5f, 0.5f, 0.9f);
     }
 }
