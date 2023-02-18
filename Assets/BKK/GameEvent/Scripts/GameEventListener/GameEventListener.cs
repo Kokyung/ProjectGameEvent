@@ -21,7 +21,7 @@ namespace BKK.GameEventArchitecture
         private UnityEvent onCancel;
 
         [Tooltip("OnStart가 다시 호출되기 까지 걸리는 시간"), SerializeField]
-        private float startDelay = 0f;
+        private float restartDelay = 0f;
 
         [Tooltip("OnStart가 호출되기 까지 걸리는 시간"), SerializeField]
         private float startTiming = 0f;
@@ -59,7 +59,7 @@ namespace BKK.GameEventArchitecture
 
         private void OnValidate()
         {
-            startDelay = Mathf.Clamp(startDelay, 0, float.MaxValue);
+            restartDelay = Mathf.Clamp(restartDelay, 0, float.MaxValue);
             endTiming = Mathf.Clamp(endTiming, 0, float.MaxValue);
         }
 
@@ -94,7 +94,7 @@ namespace BKK.GameEventArchitecture
             
             onStart.Invoke();
 
-            yield return new WaitForSeconds(startDelay);
+            yield return new WaitForSeconds(restartDelay);
 
             startDelayed = false;
         }
@@ -135,7 +135,7 @@ namespace BKK.GameEventArchitecture
         private Tresponse onCancel;
 
         [Tooltip("OnStart가 다시 호출되기 까지 걸리는 시간"), SerializeField]
-        private float startDelay = 0f;
+        private float restartDelay = 0f;
 
         [Tooltip("OnStart가 호출되기 까지 걸리는 시간"), SerializeField]
         private float startTiming = 0f;
@@ -163,7 +163,7 @@ namespace BKK.GameEventArchitecture
 
         private void OnDestroy()
         {
-            if(gameEvent) gameEvent.Deregister(this);
+            if(gameEvent != null) gameEvent.Deregister(this);
         }
 
         private void Reset()
@@ -174,8 +174,13 @@ namespace BKK.GameEventArchitecture
 
         private void OnValidate()
         {
-            startDelay = Mathf.Clamp(startDelay, 0, float.MaxValue);
+            restartDelay = Mathf.Clamp(restartDelay, 0, float.MaxValue);
             endTiming = Mathf.Clamp(endTiming, 0, float.MaxValue);
+        }
+
+        private void OnDrawGizmos()
+        {
+            
         }
 
         /// <summary>
@@ -209,7 +214,7 @@ namespace BKK.GameEventArchitecture
             
             onStart.Invoke(value);
 
-            yield return new WaitForSeconds(startDelay);
+            yield return new WaitForSeconds(restartDelay);
 
             startDelayed = false;
         }
