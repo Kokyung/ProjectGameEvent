@@ -9,6 +9,13 @@ namespace BKK.GameEventArchitecture.Editor
     [CustomEditor(typeof(GameEventListener))]
     public class GameEventListenerEditor : UnityEditor.Editor
     {
+        private SerializedProperty mRestartDelay;
+        
+        private void OnEnable()
+        {
+            mRestartDelay = serializedObject.FindProperty("restartDelay");
+        }
+        
         private void OnSceneGUI()
         {
             var listener = target as GameEventListener; 
@@ -61,6 +68,13 @@ namespace BKK.GameEventArchitecture.Editor
     [CustomEditor(typeof(GameEventListener<,,>),true)]
     public class CustomTypeGameEventListenerEditor : UnityEditor.Editor
     {
+        private SerializedProperty mRestartDelay;
+        
+        private void OnEnable()
+        {
+            mRestartDelay = serializedObject.FindProperty("restartDelay");
+        }
+
         private void OnSceneGUI()
         {
             var listener = target as MonoBehaviour;

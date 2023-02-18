@@ -62,6 +62,11 @@ namespace BKK.GameEventArchitecture
             restartDelay = Mathf.Clamp(restartDelay, 0, float.MaxValue);
             endTiming = Mathf.Clamp(endTiming, 0, float.MaxValue);
         }
+        
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawIcon(transform.position,"");
+        }
 
         /// <summary>
         /// 단일 게임 이벤트 리스너에 등록된 유니티 이벤트를 호출합니다.
@@ -180,7 +185,7 @@ namespace BKK.GameEventArchitecture
 
         private void OnDrawGizmos()
         {
-            
+            Gizmos.DrawIcon(transform.position,"");
         }
 
         /// <summary>
