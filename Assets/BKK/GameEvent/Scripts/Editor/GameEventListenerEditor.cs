@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -43,6 +44,7 @@ namespace BKK.GameEventArchitecture.Editor
                     if (fieldType.IsAssignableFrom(typeof(GameEvent)))
                     {
                         var gameEventName = field.GetValue(behaviour).ToString();
+                        // var gameEventName = GetValueRecursively(field, behaviour).ToString();
 
                         if(gameEventName != listenerGameEventName) break;
                         
@@ -96,11 +98,12 @@ namespace BKK.GameEventArchitecture.Editor
                 foreach (var field in fields)
                 {
                     var fieldType = field.FieldType;
-        
+
                     if (fieldType == targetArgs[1])
                     {
                         var gameEventName = field.GetValue(behaviour).ToString();
-        
+                        // var gameEventName = GetValueRecursively(field, behaviour).ToString();
+
                         if(gameEventName != listenerGameEventName) continue;
                         
                         Handles.color = GameEventEditorUtility.lineColor;
@@ -152,6 +155,34 @@ namespace BKK.GameEventArchitecture.Editor
                 RestartTimeCheck = 0;
                 startDelayTimeCheck = 0;
             }
+        }
+
+        private HashSet<Type> nonRecursiveTypes = new HashSet<Type>
+        {
+            typeof(System.Int16), typeof(System.Int32), typeof(System.Int64), typeof(System.UInt16),
+            typeof(System.UInt32), typeof(System.UInt64), typeof(System.String), typeof(System.Boolean),
+            typeof(System.Byte),
+            typeof(System.Char), typeof(System.Double), typeof(UnityEngine.Vector2),typeof(UnityEngine.Vector3), typeof(UnityEngine.Quaternion),
+            typeof(UnityEngine.ScriptableObject)
+        };
+        
+        protected object GetValueRecursively(FieldInfo field, object target)
+        {
+            var value = field.GetValue(target);
+
+            if (nonRecursiveTypes.Contains(value.GetType()))
+            {
+                return value;
+            }
+
+            var inFields = field.GetType().GetFields();
+                
+            foreach (var fieldInfo in inFields)
+            {
+                return GetValueRecursively(fieldInfo, value);
+            }
+
+            return value;
         }
     }
 
