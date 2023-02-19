@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using BKK.Extension;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,8 +30,8 @@ namespace BKK.GameEventArchitecture
         [Tooltip("OnEnd가 호출되기 까지 걸리는 시간"), SerializeField]
         private float endTiming = 1f;
 
-        private bool startDelayed = false;
-        private bool endDelayed = false;
+        [HideInInspector] public bool startDelayed = false;
+        [HideInInspector] public bool endDelayed = false;
 
         private void Awake()
         {
@@ -73,10 +74,8 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         public override void RaiseEvent()
         {
-            if (!this.gameObject.activeSelf) return;
-            
-            StartCoroutine(RunEvent());
-            StartCoroutine(RunEndEvent());
+            RunEventAsync();
+            RunEndEventAsync();
         }
 
         /// <summary>
@@ -84,39 +83,44 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         public override void StopEvent()
         {
-            onCancel.Invoke();
-            StopAllCoroutines();
-            Reset();
+            StopEventAsync();
         }
 
-        private IEnumerator RunEvent()
+        private async void RunEventAsync()
         {
-            if (startDelayed) yield break;
+            if (startDelayed) return;
 
             startDelayed = true;
 
-            yield return new WaitForSeconds(startTiming);            
-            
+            await Task.Delay((int)(startTiming * 1000));
+
             onStart.Invoke();
 
-            yield return new WaitForSeconds(restartDelay);
+            await Task.Delay((int)(restartDelay * 1000));
 
             startDelayed = false;
         }
-
-        private IEnumerator RunEndEvent()
+        private async void RunEndEventAsync()
         {
-            if (endDelayed) yield break;
+            if (endDelayed) return;
 
             endDelayed = true;
 
-            yield return new WaitForSeconds(endTiming);
+            await Task.Delay((int)(endTiming * 1000));
 
             onEnd.Invoke();
 
             endDelayed = false;
         }
-        
+
+        private async void StopEventAsync()
+        {
+            onCancel.Invoke();
+            CancelInvoke(nameof(RunEventAsync));
+            CancelInvoke(nameof(RunEndEventAsync));
+            Reset();
+        }
+
         public override string GetListenerPath()
         {
             return this.GetPath();
@@ -148,8 +152,8 @@ namespace BKK.GameEventArchitecture
         [Tooltip("OnEnd가 호출되기 까지 걸리는 시간"), SerializeField]
         private float endTiming = 1f;
 
-        private bool startDelayed = false;
-        private bool endDelayed = false;
+        [HideInInspector] public bool startDelayed = false;
+        [HideInInspector] public bool endDelayed = false;
 
         private void Awake()
         {
@@ -193,10 +197,8 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         public override void RaiseEvent(Ttype value)
         {
-            if (!this.gameObject.activeSelf) return;
-
-            StartCoroutine(RunEvent(value));
-            StartCoroutine(RunEndEvent(value));
+            RunEventAsync(value);
+            RunEndEventAsync(value);
         }
 
         /// <summary>
@@ -204,37 +206,43 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         public override void StopEvent(Ttype value)
         {
-            onCancel.Invoke(value);
-            StopAllCoroutines();
-            Reset();
+            StopEventAsync(value);
         }
 
-        private IEnumerator RunEvent(Ttype value)
+        private async void RunEventAsync(Ttype value)
         {
-            if (startDelayed) yield break;
+            if (startDelayed) return;
 
             startDelayed = true;
 
-            yield return new WaitForSeconds(startTiming);            
-            
+            await Task.Delay((int)(startTiming * 1000));
+
             onStart.Invoke(value);
 
-            yield return new WaitForSeconds(restartDelay);
+            await Task.Delay((int)(restartDelay * 1000));
 
             startDelayed = false;
         }
-
-        private IEnumerator RunEndEvent(Ttype value)
+        
+        private async void RunEndEventAsync(Ttype value)
         {
-            if (endDelayed) yield break;
+            if (endDelayed) return;
 
             endDelayed = true;
 
-            yield return new WaitForSeconds(endTiming);
+            await Task.Delay((int)(endTiming * 1000));
 
             onEnd.Invoke(value);
 
             endDelayed = false;
+        }
+        
+        private void StopEventAsync(Ttype value)
+        {
+            onCancel.Invoke(value);
+            CancelInvoke(nameof(RunEventAsync));
+            CancelInvoke(nameof(RunEndEventAsync));
+            Reset();
         }
 
         public override string GetListenerPath()

@@ -7,15 +7,8 @@ using UnityEngine.Events;
 namespace BKK.GameEventArchitecture.Editor
 {
     [CustomEditor(typeof(GameEventListener))]
-    public class GameEventListenerEditor : UnityEditor.Editor
+    public class GameEventListenerEditor : BaseGameEventListenerEditor
     {
-        private SerializedProperty mRestartDelay;
-        
-        private void OnEnable()
-        {
-            mRestartDelay = serializedObject.FindProperty("restartDelay");
-        }
-        
         private void OnSceneGUI()
         {
             var listener = target as GameEventListener; 
@@ -55,6 +48,9 @@ namespace BKK.GameEventArchitecture.Editor
                         
                         Handles.color = GameEventEditorUtility.lineColor;
                         Handles.DrawDottedLine(listener.transform.position, behaviour.transform.position, 3);
+                        
+                        DrawEventDot(listener.transform.position, behaviour.transform.position);
+
                         Handles.Label(behaviour.transform.position,
                             $"{listenerGameEventValue.name} ({fieldType.Name})\n{behaviour.name} ({behaviour.GetType().Name})",
                             GameEventEditorUtility.GameEventStyle);
@@ -66,15 +62,8 @@ namespace BKK.GameEventArchitecture.Editor
     }
     
     [CustomEditor(typeof(GameEventListener<,,>),true)]
-    public class CustomTypeGameEventListenerEditor : UnityEditor.Editor
+    public class CustomTypeGameEventListenerEditor : BaseGameEventListenerEditor
     {
-        private SerializedProperty mRestartDelay;
-        
-        private void OnEnable()
-        {
-            mRestartDelay = serializedObject.FindProperty("restartDelay");
-        }
-
         private void OnSceneGUI()
         {
             var listener = target as MonoBehaviour;
@@ -116,16 +105,9 @@ namespace BKK.GameEventArchitecture.Editor
                         
                         Handles.color = GameEventEditorUtility.lineColor;
                         Handles.DrawDottedLine(listener.transform.position, behaviour.transform.position, 3);
-        
-                        // var direction = (behaviour.transform.position - listener.transform.position).normalized;
-                        // var distance = Vector3.Distance(behaviour.transform.position, listener.transform.position);
-                        //
-                        // var point = Mathf.Lerp(0, distance, 3 * Time.deltaTime);
-                        //
-                        // Handles.color = Color.red;
-                        // Handles.DrawLine(listener.transform.position + direction * point,
-                        //     listener.transform.position + direction * (point + 0.25f));
-        
+
+                        DrawEventDot(behaviour.transform.position, listener.transform.position);
+
                         Handles.Label(behaviour.transform.position,
                             $"{behaviour.name} ({behaviour.GetType().Name})\n{listenerGameEventValue.name} ({fieldType.Name})",
                             GameEventEditorUtility.GameEventStyle);
@@ -136,12 +118,49 @@ namespace BKK.GameEventArchitecture.Editor
         }
     }
 
+    public class BaseGameEventListenerEditor : UnityEditor.Editor
+    {
+        private SerializedProperty mRestartDelay;
+        private SerializedProperty mStartDelayed;
+        private SerializedProperty mStartTiming;
+
+        private float RestartTimeCheck = 0;
+        private float startDelayTimeCheck = 0;
+
+        private void OnEnable()
+        {
+            mRestartDelay = serializedObject.FindProperty("restartDelay");
+            mStartDelayed = serializedObject.FindProperty("startDelayed");
+            mStartTiming = serializedObject.FindProperty("startTiming");
+        }
+
+        protected void DrawEventDot(Vector3 from, Vector3 to)
+        {
+            if (mStartDelayed.boolValue)
+            {
+                var direction = (to - from).normalized;
+                var distance = Vector3.Distance(to, from);
+
+                RestartTimeCheck += Time.deltaTime /mStartTiming.floatValue;
+                var point = Mathf.Lerp(0, distance, RestartTimeCheck);
+
+                Handles.color = GameEventEditorUtility.dotColor;
+                Handles.DrawLine(from + direction * point, from + direction * (point + 0.25f));
+            }
+            else
+            {
+                RestartTimeCheck = 0;
+                startDelayTimeCheck = 0;
+            }
+        }
+    }
+
     public static class GameEventEditorUtility
     {
-        // public static readonly Color lineColor = new Color(0.2f, 0.1f, 0.7f);
         public static readonly Color lineColor = Color.green;
         public static readonly Color gameObjectNameColor = Color.gray;
         public static readonly Color listenerColor = Color.gray;
+        public static readonly Color dotColor = Color.red;
 
         public static readonly GUIStyle GameEventStyle = new GUIStyle
         {
