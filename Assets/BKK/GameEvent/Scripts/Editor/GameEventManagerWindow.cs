@@ -317,7 +317,7 @@ namespace BKK.GameEventArchitecture
         /// <returns>현재 Scene에 있는 모든 게임 이벤트 리스너</returns>
         private static List<GameEventListener> GetAllListenerInScene()
         {
-            var objList = FindObjectsOfType<GameEventListener>().OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
+            var objList = FindObjectsOfType<GameEventListener>(true).OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
 
             return objList.Where(gel => gel.gameEvent).ToList();
         }

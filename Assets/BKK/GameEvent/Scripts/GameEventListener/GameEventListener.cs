@@ -32,6 +32,7 @@ namespace BKK.GameEventArchitecture
 
         [HideInInspector] public bool startDelayed = false;
         [HideInInspector] public bool endDelayed = false;
+        [HideInInspector] public bool restartDelayed = false;
 
         private void Awake()
         {
@@ -88,17 +89,20 @@ namespace BKK.GameEventArchitecture
 
         private async void RunEventAsync()
         {
-            if (startDelayed) return;
+            if (restartDelayed) return;
 
             startDelayed = true;
+            restartDelayed = true;
 
             await Task.Delay((int)(startTiming * 1000));
 
+            startDelayed = false;
+            
             onStart.Invoke();
 
             await Task.Delay((int)(restartDelay * 1000));
-
-            startDelayed = false;
+            
+            restartDelayed = false;
         }
         private async void RunEndEventAsync()
         {
@@ -154,6 +158,7 @@ namespace BKK.GameEventArchitecture
 
         [HideInInspector] public bool startDelayed = false;
         [HideInInspector] public bool endDelayed = false;
+        [HideInInspector] public bool restartDelayed = false;
 
         private void Awake()
         {
@@ -211,17 +216,20 @@ namespace BKK.GameEventArchitecture
 
         private async void RunEventAsync(Ttype value)
         {
-            if (startDelayed) return;
+            if (restartDelayed) return;
 
             startDelayed = true;
+            restartDelayed = true;
 
             await Task.Delay((int)(startTiming * 1000));
 
+            startDelayed = false;
+            
             onStart.Invoke(value);
 
             await Task.Delay((int)(restartDelay * 1000));
-
-            startDelayed = false;
+            
+            restartDelayed = false;
         }
         
         private async void RunEndEventAsync(Ttype value)

@@ -143,7 +143,7 @@ namespace BKK.GameEventArchitecture.Editor
             {
                 var direction = (to - from).normalized;
                 var distance = Vector3.Distance(to, from);
-
+                
                 RestartTimeCheck += Time.deltaTime /mStartTiming.floatValue;
                 var point = Mathf.Lerp(0, distance, RestartTimeCheck);
 

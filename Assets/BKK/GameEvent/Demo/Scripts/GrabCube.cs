@@ -14,7 +14,7 @@ public class GrabCube : MonoBehaviour
         receivedPos = screenPos;
     }
 
-    public void OnMouseDrag()
+    private void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(receivedPos);
 
