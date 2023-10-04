@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Threading.Tasks;
 using BKK.Extension;
 using UnityEngine;
@@ -9,9 +8,8 @@ namespace BKK.GameEventArchitecture
 {
     public class GameEventListener : BaseGameEventListener
     {
-        [Tooltip("등록할 게임 이벤트"), SerializeField]
-        public GameEvent gameEvent;
-
+        public GameEvent GameEvent => gameEvent as GameEvent;
+        
         [Tooltip("이벤트 시작할 때 호출될 유니티 이벤트"), SerializeField]
         private UnityEvent onStart;
 
@@ -20,6 +18,12 @@ namespace BKK.GameEventArchitecture
         
         [Tooltip("이벤트 취소할 때 호출될 유니티 이벤트"), SerializeField]
         private UnityEvent onCancel;
+        
+        public UnityEvent OnStart => onStart;
+
+        public UnityEvent OnEnd => onEnd;
+
+        public UnityEvent OnCancel => onCancel;
 
         [Tooltip("OnStart가 다시 호출되기 까지 걸리는 시간"), SerializeField]
         private float restartDelay = 0f;
@@ -117,7 +121,7 @@ namespace BKK.GameEventArchitecture
             endDelayed = false;
         }
 
-        private async void StopEventAsync()
+        private void StopEventAsync()
         {
             onCancel.Invoke();
             CancelInvoke(nameof(RunEventAsync));
@@ -135,8 +139,9 @@ namespace BKK.GameEventArchitecture
         where Tevent : GameEvent<Ttype> 
         where Tresponse : UnityEvent<Ttype>
     {
-        [Tooltip("등록할 게임 이벤트"), SerializeField]
-        public Tevent gameEvent;
+        // [Tooltip("등록할 게임 이벤트"), SerializeField]
+        // public Tevent gameEvent;
+        public Tevent GameEvent => gameEvent as Tevent;
 
         [Tooltip("이벤트 시작할 때 호출될 유니티 이벤트"), SerializeField]
         private Tresponse onStart;
@@ -146,6 +151,15 @@ namespace BKK.GameEventArchitecture
         
         [Tooltip("이벤트 취소할 때 호출될 유니티 이벤트"), SerializeField]
         private Tresponse onCancel;
+        
+        // [Tooltip("이벤트 시작할 때 호출될 유니티 이벤트")]
+        public Tresponse OnStart => onStart;
+
+        // [Tooltip("이벤트 끝날 때 호출될 유니티 이벤트")]
+        public Tresponse OnEnd => onEnd;
+        
+        // [Tooltip("이벤트 취소할 때 호출될 유니티 이벤트")]
+        public Tresponse OnCancel => onCancel;
 
         [Tooltip("OnStart가 다시 호출되기 까지 걸리는 시간"), SerializeField]
         private float restartDelay = 0f;

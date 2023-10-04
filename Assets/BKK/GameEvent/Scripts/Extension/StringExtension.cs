@@ -24,6 +24,11 @@ namespace BKK.Extension
             if (current.parent == null) return current.name;
             return current.parent.GetPath() + "/" + current.name;
         }
+
+        public static void CopyToClipBoard(string str)
+        {
+            GUIUtility.systemCopyBuffer = str;
+        }
         
         public static string[] GetStringArrayFromEnum(this Type t)
         {

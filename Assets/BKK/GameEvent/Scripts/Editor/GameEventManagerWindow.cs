@@ -11,7 +11,7 @@ namespace BKK.GameEventArchitecture
     public sealed class GameEventManagerWindow : SearchableEditorWindow
     {
         private List<GameEventListElement> projectEventList = new List<GameEventListElement>();
-        private List<GameEventListener> listenerList = new List<GameEventListener>();
+        private List<BaseGameEventListener> listenerList = new List<BaseGameEventListener>();
         
         private Vector2 scrollPos;
 
@@ -19,7 +19,8 @@ namespace BKK.GameEventArchitecture
         private MultiColumnHeader sceneColumnHeader;
         private MultiColumnHeaderState.Column[] projectColumns;
         private MultiColumnHeaderState.Column[] sceneColumns;
-        
+
+        private readonly string gameEventAssetFilter = "t:BaseGameEvent";
         private readonly Color lighterColor = Color.white * 0.3f;
         private readonly Color darkerColor = Color.white * 0.1f;
 
@@ -234,12 +235,12 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         private void GetAssetListInProject()
         {
-            var assetGUIDList = AssetDatabase.FindAssets("t:GameEvent",null);
+            var assetGUIDList = AssetDatabase.FindAssets(gameEventAssetFilter,null);
 
             projectEventList.Clear();
             foreach (var guid in assetGUIDList)
             {
-                var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as GameEvent;
+                var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as BaseGameEvent;
                 Add(ref projectEventList, asset);
             }
 
@@ -315,14 +316,14 @@ namespace BKK.GameEventArchitecture
         /// 현재 Scene에 있는 모든 게임 이벤트 리스너를 가져와서 하이러키 순서로 정렬한 뒤 리턴합니다.
         /// </summary>
         /// <returns>현재 Scene에 있는 모든 게임 이벤트 리스너</returns>
-        private static List<GameEventListener> GetAllListenerInScene()
+        private static List<BaseGameEventListener> GetAllListenerInScene()
         {
-            var objList = FindObjectsOfType<GameEventListener>(true).OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
+            var objList = FindObjectsOfType<BaseGameEventListener>(true).OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
 
             return objList.Where(gel => gel.gameEvent).ToList();
         }
 
-        private List<GameEventListener> Search(List<GameEventListener> list)
+        private List<BaseGameEventListener> Search(List<BaseGameEventListener> list)
         {
             var searchStringWithoutWhiteSpace = searchString.Trim();
             return list.FindAll(e => e.gameEvent.name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
@@ -347,7 +348,7 @@ namespace BKK.GameEventArchitecture
         private void Draw()
         {
             minSize = new Vector2(700, 525);
-            var tempGeListenerList = new List<GameEventListener>();
+            var tempGeListenerList = new List<BaseGameEventListener>();
             var tempGeList = new List<GameEventListElement>();
             if (searchField.HasFocus())
             {
@@ -465,16 +466,17 @@ namespace BKK.GameEventArchitecture
                     
                     columnRect.y = rowRect.y;
 
-                    GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    };
+                    // GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
+                    // {
+                    //     padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
+                    // };
+                    
                     GUI.enabled = false;
 
                     EditorGUI.ObjectField(
                         position: this.projectColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
                         list[a].gameEvent,
-                        typeof(GameEvent),
+                        typeof(BaseGameEvent),
                         false
                     );
                     GUI.enabled = true;
@@ -607,7 +609,7 @@ namespace BKK.GameEventArchitecture
         /// <summary>
         /// 게임 이벤트 매니저 윈도우의 전체 비주얼적인 내용을 표시해줍니다.
         /// </summary>
-        private void DrawListInScene(ref List<GameEventListener> list)
+        private void DrawListInScene(ref List<BaseGameEventListener> list)
         {
             var currentEvent = Event.current;
 
@@ -683,7 +685,7 @@ namespace BKK.GameEventArchitecture
                     EditorGUI.ObjectField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
                         list[a],
-                        typeof(GameEvent),
+                        typeof(BaseGameEvent),
                         false
                     );
                     GUI.enabled = true;
@@ -709,7 +711,7 @@ namespace BKK.GameEventArchitecture
                     EditorGUI.ObjectField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
                         list[a].gameEvent,
-                        typeof(GameEvent),
+                        typeof(BaseGameEvent),
                         false
                     );
                     GUI.enabled = true;
@@ -849,7 +851,7 @@ namespace BKK.GameEventArchitecture
         /// 게임 이벤트 에셋을 윈도우에 표시할때 사용할 직렬화 클래스 리스트에 추가합니다. 
         /// </summary>
         /// <param name="asset"></param>
-        private void Add(ref List<GameEventListElement> list, GameEvent asset)
+        private void Add(ref List<GameEventListElement> list, BaseGameEvent asset)
         {
             var newData = new GameEventListElement
             {
@@ -875,7 +877,7 @@ namespace BKK.GameEventArchitecture
     [System.Serializable]
     public class GameEventListElement
     {
-        public GameEvent gameEvent;
+        public BaseGameEvent gameEvent;
         public string name;
         public string assetPath;
         //public string scenePath;

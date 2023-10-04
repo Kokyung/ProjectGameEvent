@@ -8,10 +8,10 @@ namespace BKK.GameEventArchitecture
     {
         private readonly HashSet<BaseGameEventListener> listeners = new HashSet<BaseGameEventListener>();
 
-#if UNITY_EDITOR
-        [HideInInspector]
-        public string description;
-#endif
+// #if UNITY_EDITOR
+//         [HideInInspector]
+//         public string description;
+// #endif
 
         /// <summary>
         /// 게임 이벤트에 등록된 모든 게임 이벤트 리스너의 유니티 이벤트들을 호출합니다.
@@ -60,12 +60,12 @@ namespace BKK.GameEventArchitecture
     {
         private readonly HashSet<BaseGameEventListener<T>> listeners = new HashSet<BaseGameEventListener<T>>();
 
-#if UNITY_EDITOR
-        [HideInInspector]
-        public string description;
-
-        [SerializeField] protected T debugValue = default;
-#endif
+// #if UNITY_EDITOR
+//         [HideInInspector]
+//         public string description;
+//
+//         [SerializeField] protected T debugValue = default;
+// #endif
 
         /// <summary>
         /// 게임 이벤트에 등록된 모든 게임 이벤트 리스너의 유니티 이벤트들을 호출합니다.

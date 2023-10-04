@@ -99,7 +99,7 @@ namespace BKK.GameEventArchitecture.Editor
                 {
                     var fieldType = field.FieldType;
 
-                    if (fieldType == targetArgs[1])
+                    if (targetArgs.Length > 2 && fieldType == targetArgs[1])
                     {
                         var gameEventName = field.GetValue(behaviour).ToString();
                         // var gameEventName = GetValueRecursively(field, behaviour).ToString();
