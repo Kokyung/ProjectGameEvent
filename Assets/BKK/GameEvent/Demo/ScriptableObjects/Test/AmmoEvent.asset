@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb53eccb991be410d8b912a64d769696, type: 3}
   m_Name: AmmoEvent
   m_EditorClassIdentifier: 
-  description: "\uC794\uD0C4 \uD45C\uC2DC \uC774\uBCA4\uD2B8"
+  description: "\uC794\uD0C4 \uD45C\uC2DC \uC774\uBCA4\uD2B8. ###/#### \uD615\uC2DD\uC73C\uB85C
+    \uB9AC\uD134\uD560 \uAC83"
   debugValue: 

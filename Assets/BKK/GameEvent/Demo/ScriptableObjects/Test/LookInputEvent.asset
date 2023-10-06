@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: LookInputEvent
   m_EditorClassIdentifier: 
   description: "\uC2DC\uC57C \uC785\uB825"
-  debugValue: {x: 0, y: 0}
+  debugValue: {x: 3, y: 21}

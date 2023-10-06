@@ -144,8 +144,6 @@ namespace BKK.GameEventArchitecture.Editor
                 BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
             _cancelMethod = target.GetType().BaseType.GetMethod("Cancel",
                 BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
-
-            // FindDescriptionOption();
         }
 
         public override void OnInspectorGUI()
@@ -159,12 +157,14 @@ namespace BKK.GameEventArchitecture.Editor
 
             if (GUILayout.Button("실행"))
             {
-                ExecuteRaiseMethod(GetDebugFieldValue(_debugValue));
+                object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
+                MethodExtension.ExecuteMethod(target, _raiseMethod, debugValue);
             }
 
             if (GUILayout.Button("취소"))
             {
-                ExecuteCancelMethod(GetDebugFieldValue(_debugValue));
+                object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
+                MethodExtension.ExecuteMethod(target, _cancelMethod, debugValue);
             }
 
             if (!EditorApplication.isPlaying) GUI.enabled = true;
@@ -242,26 +242,6 @@ namespace BKK.GameEventArchitecture.Editor
                 GUI.skin.settings.cursorColor = oldCursorColor;
     
             return value;
-        }
-        
-        private void ExecuteRaiseMethod(object value)
-        {
-            _raiseMethod.Invoke(target, new[] { value });
-        }
-        
-        private void ExecuteCancelMethod(object value)
-        {
-            _cancelMethod.Invoke(target, new[] { value });
-        }
-
-        private object GetDebugFieldValue(SerializedProperty property)
-        {
-            Type targetType = property.serializedObject.targetObject.GetType();
-
-            FieldInfo targetField =
-                targetType.GetField(debugValuePropertyName, BindingFlags.Instance | BindingFlags.NonPublic);
-
-            return targetField.GetValue(property.serializedObject.targetObject);
         }
     }
 }

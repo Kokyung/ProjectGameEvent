@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BKK.Extension;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -19,8 +20,7 @@ namespace BKK.GameEventArchitecture
         private MultiColumnHeader sceneColumnHeader;
         private MultiColumnHeaderState.Column[] projectColumns;
         private MultiColumnHeaderState.Column[] sceneColumns;
-
-        private readonly string gameEventAssetFilter = "t:BaseGameEvent";
+        
         private readonly Color lighterColor = Color.white * 0.3f;
         private readonly Color darkerColor = Color.white * 0.1f;
 
@@ -235,12 +235,12 @@ namespace BKK.GameEventArchitecture
         /// </summary>
         private void GetAssetListInProject()
         {
-            var assetGUIDList = AssetDatabase.FindAssets(gameEventAssetFilter,null);
+            var assetGUIDList = AssetDatabase.FindAssets($"t:{typeof(GameEventAsset)}", null);
 
             projectEventList.Clear();
             foreach (var guid in assetGUIDList)
             {
-                var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as BaseGameEvent;
+                var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as GameEventAsset;
                 Add(ref projectEventList, asset);
             }
 
@@ -466,11 +466,6 @@ namespace BKK.GameEventArchitecture
                     
                     columnRect.y = rowRect.y;
 
-                    // GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    // {
-                    //     padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    // };
-                    
                     GUI.enabled = false;
 
                     EditorGUI.ObjectField(
@@ -578,14 +573,31 @@ namespace BKK.GameEventArchitecture
                         height: columnRect.height
                     );
                     if (!EditorApplication.isPlaying) GUI.enabled = false;
+                    
                     if (GUI.Button(button1Rect, "Invoke"))
                     {
-                        list[a].gameEvent.Raise();
+                        if (list[a].gameEvent is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
+                        {
+                            gameEvent.Raise();
+                        }
+                        else// 제네릭 타입 게임 이벤트인 경우 메서드 정보를 찾아서 호출
+                        {
+                            ExecuteCustomTypeDebugMethod(list[a].gameEvent, "Raise");
+                        }
                     }
+                    
                     if (GUI.Button(button2Rect, "Cancel"))
                     {
-                        list[a].gameEvent.Cancel();
+                        if (list[a].gameEvent is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
+                        {
+                            gameEvent.Cancel();
+                        }
+                        else// 제네릭 타입 게임 이벤트인 경우 메서드 정보를 찾아서 호출
+                        {
+                            ExecuteCustomTypeDebugMethod(list[a].gameEvent, "Cancel");
+                        }
                     }
+                    
                     if (!EditorApplication.isPlaying) GUI.enabled = true;
                 }
             }
@@ -605,7 +617,20 @@ namespace BKK.GameEventArchitecture
 
             GUI.EndScrollView();
         }
-        
+
+        private void ExecuteCustomTypeDebugMethod(GameEventAsset gameEventAsset, string methodName)
+        {
+            Type customTypeGameEvent = gameEventAsset.GetType();
+            MethodInfo method = customTypeGameEvent.BaseType.GetMethod(methodName,
+                BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+
+            UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(gameEventAsset);
+            SerializedProperty target = editor.serializedObject.FindProperty("debugValue");
+            object debugValue = EditorExtension.GetFieldValue(target, "debugValue");
+
+            MethodExtension.ExecuteMethod(gameEventAsset, method, debugValue);
+        }
+
         /// <summary>
         /// 게임 이벤트 매니저 윈도우의 전체 비주얼적인 내용을 표시해줍니다.
         /// </summary>
@@ -851,7 +876,7 @@ namespace BKK.GameEventArchitecture
         /// 게임 이벤트 에셋을 윈도우에 표시할때 사용할 직렬화 클래스 리스트에 추가합니다. 
         /// </summary>
         /// <param name="asset"></param>
-        private void Add(ref List<GameEventListElement> list, BaseGameEvent asset)
+        private void Add(ref List<GameEventListElement> list, GameEventAsset asset)
         {
             var newData = new GameEventListElement
             {
@@ -877,7 +902,7 @@ namespace BKK.GameEventArchitecture
     [System.Serializable]
     public class GameEventListElement
     {
-        public BaseGameEvent gameEvent;
+        public GameEventAsset gameEvent;
         public string name;
         public string assetPath;
         //public string scenePath;
