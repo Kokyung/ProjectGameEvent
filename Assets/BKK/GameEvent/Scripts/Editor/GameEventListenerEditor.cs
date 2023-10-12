@@ -71,10 +71,10 @@ namespace BKK.GameEventArchitecture.Editor
             var listener = target as MonoBehaviour;
         
             var listenerGameEventValue = target.GetType().GetField("gameEvent").GetValue(listener) as ScriptableObject;
-            var listenerGameEventType = listenerGameEventValue.GetType();
             
             if(listenerGameEventValue == null) return;
             
+            var listenerGameEventType = listenerGameEventValue.GetType();
             var listenerGameEventName = listenerGameEventValue.ToString();
         
             var targetType = target.GetType();

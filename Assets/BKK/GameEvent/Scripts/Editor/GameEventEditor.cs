@@ -157,6 +157,7 @@ namespace BKK.GameEventArchitecture.Editor
 
             if (GUILayout.Button("실행"))
             {
+                // debug 값은 어떤 타입의 값이든 될 수 있기 때문에 System.Reflection 기능을 활용하여 가져온다.
                 object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
                 MethodExtension.ExecuteMethod(target, _raiseMethod, debugValue);
             }

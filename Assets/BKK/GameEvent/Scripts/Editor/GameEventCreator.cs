@@ -27,9 +27,14 @@ namespace BKK.GameEventArchitecture.Editor
             string menuName = "BKK/Game Event Architecture", bool refresh = false)
         {
             var splitIndex = type.LastIndexOf('.');
-            var nameSpace = type.Substring(0, splitIndex);
+            var nameSpace = "";
             var classType = type.Substring(splitIndex + 1);
-            
+
+            if (splitIndex != -1)
+            {
+                nameSpace = type.Substring(0, splitIndex);
+            }
+
             var filePath = $"{folderPath}/{classType}GameEvent.cs";
             var existScripts = AssetDatabase.FindAssets($"{classType}GameEvent t:script");
 
@@ -43,7 +48,10 @@ namespace BKK.GameEventArchitecture.Editor
                 using var outfile = new StreamWriter(filePath);
                 outfile.WriteLine("// 게임 이벤트 생성 메뉴에 의해 생성되었습니다.");
                 outfile.WriteLine("using UnityEngine;");
-                if(nameSpace != "UnityEngine") outfile.WriteLine($"using {nameSpace};");
+                
+                if (nameSpace != "UnityEngine" && !string.IsNullOrEmpty(nameSpace))
+                    outfile.WriteLine($"using {nameSpace};");
+                
                 outfile.WriteLine("");
                 outfile.WriteLine("namespace BKK.GameEventArchitecture");
                 outfile.WriteLine("{");
@@ -78,8 +86,13 @@ namespace BKK.GameEventArchitecture.Editor
         private static void CreateGameEventListener(string type, string folderPath, bool refresh = false)
         {
             var splitIndex = type.LastIndexOf('.');
-            var nameSpace = type.Substring(0, splitIndex);
+            var nameSpace = "";
             var classType = type.Substring(splitIndex + 1);
+
+            if (splitIndex != -1)
+            {
+                nameSpace = type.Substring(0, splitIndex);
+            }
             
             var filePath = $"{folderPath}/{classType}GameEventListener.cs";
             var existScripts = AssetDatabase.FindAssets($"{classType}GameEventListener t:script");
@@ -95,7 +108,10 @@ namespace BKK.GameEventArchitecture.Editor
                 outfile.WriteLine("// 게임 이벤트 생성 메뉴에 의해 생성되었습니다.");
                 outfile.WriteLine("using UnityEngine;");
                 outfile.WriteLine("using UnityEngine.Events;");
-                if(nameSpace != "UnityEngine") outfile.WriteLine($"using {nameSpace};");
+
+                if (nameSpace != "UnityEngine" && !string.IsNullOrEmpty(nameSpace))
+                    outfile.WriteLine($"using {nameSpace};");
+                
                 outfile.WriteLine("");
                 outfile.WriteLine("namespace BKK.GameEventArchitecture");
                 outfile.WriteLine("{");
