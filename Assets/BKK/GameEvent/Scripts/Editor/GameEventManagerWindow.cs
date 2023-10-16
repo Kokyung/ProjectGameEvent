@@ -23,6 +23,7 @@ namespace BKK.GameEventArchitecture
         
         private readonly Color lighterColor = Color.white * 0.3f;
         private readonly Color darkerColor = Color.white * 0.1f;
+        private readonly string debugValueName = "debugValue";
 
         private float columnsWidth;
         private const float column0MinWidth = 300;
@@ -47,7 +48,8 @@ namespace BKK.GameEventArchitecture
         {
             base.OnEnable();
             
-            InitializeColumnHeader();
+            InitializeProjectColumnHeader();
+            InitializeSceneColumnHeader();
             
             SetSearchField();
             
@@ -79,7 +81,7 @@ namespace BKK.GameEventArchitecture
         /// <summary>
         /// 표 헤더를 초기화 합니다.
         /// </summary>
-        private void InitializeColumnHeader()
+        private void InitializeProjectColumnHeader()
         {
             projectColumns = new MultiColumnHeaderState.Column[]
             {
@@ -125,13 +127,18 @@ namespace BKK.GameEventArchitecture
                 },
             };
 
-            projectColumnHeader = new MultiColumnHeader(new MultiColumnHeaderState(projectColumns));
-            projectColumnHeader.height = 50;
+            projectColumnHeader = new MultiColumnHeader(new MultiColumnHeaderState(projectColumns))
+            {
+                height = 50
+            };
             projectColumnHeader.visibleColumnsChanged += (multiColumnHeader) => multiColumnHeader.ResizeToFit();
             projectColumnHeader.sortingChanged += (multiColumnHeader) => SortAssetListInProject();
             
             projectColumnHeader.ResizeToFit();
+        }
 
+        private void InitializeSceneColumnHeader()
+        {
             sceneColumns = new MultiColumnHeaderState.Column[]
             {
                 new MultiColumnHeaderState.Column()
@@ -186,8 +193,10 @@ namespace BKK.GameEventArchitecture
                 },
             };
 
-            sceneColumnHeader = new MultiColumnHeader(new MultiColumnHeaderState(sceneColumns));
-            sceneColumnHeader.height = 50;
+            sceneColumnHeader = new MultiColumnHeader(new MultiColumnHeaderState(sceneColumns))
+            {
+                height = 50
+            };
             sceneColumnHeader.visibleColumnsChanged += (multiColumnHeader) => multiColumnHeader.ResizeToFit();
             sceneColumnHeader.sortingChanged += (multiColumnHeader) => SortAssetListInScene();
             sceneColumnHeader.ResizeToFit();
@@ -405,7 +414,7 @@ namespace BKK.GameEventArchitecture
             
             if (projectColumnHeader == null)
             {
-                InitializeColumnHeader();
+                InitializeProjectColumnHeader();
             }
 
             GUILayout.FlexibleSpace();
@@ -436,7 +445,7 @@ namespace BKK.GameEventArchitecture
                 yMax = (projectEventList.Count + 2) * columnHeight + EditorGUIUtility.singleLineHeight
             };
             
-            this.projectColumnHeader.OnGUI(rect: columnHeaderRect, xScroll: 0.0f);
+            this.projectColumnHeader.OnGUI(rect: columnHeaderRect, xScroll: scrollPos.x);
 
             this.scrollPos = GUI.BeginScrollView(
                 position: positionalRectAreaOfScrollView,
@@ -554,11 +563,6 @@ namespace BKK.GameEventArchitecture
                     
                     columnRect.y = rowRect.y;
 
-                    GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    };
-
                     var button1Rect = new Rect(
                         x: columnRect.x,
                         y: columnRect.y,
@@ -573,7 +577,7 @@ namespace BKK.GameEventArchitecture
                         height: columnRect.height
                     );
                     if (!EditorApplication.isPlaying) GUI.enabled = false;
-                    
+
                     if (GUI.Button(button1Rect, "Invoke"))
                     {
                         if (list[a].gameEvent is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
@@ -624,11 +628,16 @@ namespace BKK.GameEventArchitecture
             MethodInfo method = customTypeGameEvent.BaseType.GetMethod(methodName,
                 BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
 
-            UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(gameEventAsset);
-            SerializedProperty target = editor.serializedObject.FindProperty("debugValue");
-            object debugValue = EditorExtension.GetFieldValue(target, "debugValue");
+            object debugValue =GetDebugValue(gameEventAsset);
 
             MethodExtension.ExecuteMethod(gameEventAsset, method, debugValue);
+        }
+
+        private object GetDebugValue(GameEventAsset gameEventAsset)
+        {
+            UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(gameEventAsset);
+            SerializedProperty target = editor.serializedObject.FindProperty(debugValueName);
+            return EditorExtension.GetFieldValue(target, debugValueName);
         }
 
         /// <summary>
@@ -640,7 +649,7 @@ namespace BKK.GameEventArchitecture
 
             if (sceneColumnHeader == null)
             {
-                InitializeColumnHeader();
+                InitializeSceneColumnHeader();
             }
 
             GUILayout.FlexibleSpace();
@@ -671,7 +680,7 @@ namespace BKK.GameEventArchitecture
                 yMax = (list.Count + 2) * columnHeight + EditorGUIUtility.singleLineHeight
             };
             
-            this.sceneColumnHeader.OnGUI(rect: columnHeaderRect, xScroll: 0.0f);
+            this.sceneColumnHeader.OnGUI(rect: columnHeaderRect, xScroll: scrollPos.x);
 
             this.scrollPos = GUI.BeginScrollView(
                 position: positionalRectAreaOfScrollView,
@@ -701,11 +710,6 @@ namespace BKK.GameEventArchitecture
                     
                     columnRect.y = rowRect.y;
 
-                    GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    };
-
                     GUI.enabled = false;
                     EditorGUI.ObjectField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
@@ -726,11 +730,7 @@ namespace BKK.GameEventArchitecture
                     Rect columnRect = this.sceneColumnHeader.GetColumnRect(visibleColumnIndex: visibleColumnIndex);
                     
                     columnRect.y = rowRect.y;
-
-                    GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    };
+                    
                     GUI.enabled = false;
                     
                     EditorGUI.ObjectField(
@@ -820,11 +820,6 @@ namespace BKK.GameEventArchitecture
                     
                     columnRect.y = rowRect.y;
 
-                    GUIStyle nameFieldGUIStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        padding = new RectOffset(left: 10, right: 10, top: 2, bottom: 2)
-                    };
-
                     var button1Rect = new Rect(
                         x: columnRect.x,
                         y: columnRect.y,
@@ -839,6 +834,7 @@ namespace BKK.GameEventArchitecture
                         height: columnRect.height
                     );
                     if (!EditorApplication.isPlaying) GUI.enabled = false;
+                    
                     if (GUI.Button(button1Rect, "Invoke"))
                     {
                         list[a].gameEvent.Raise();
@@ -847,6 +843,7 @@ namespace BKK.GameEventArchitecture
                     {
                         list[a].gameEvent.Cancel();
                     }
+                    
                     if (!EditorApplication.isPlaying) GUI.enabled = true;
                 }
             }

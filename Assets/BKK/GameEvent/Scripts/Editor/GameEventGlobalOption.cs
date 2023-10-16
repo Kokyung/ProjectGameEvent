@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BKK.GameEventArchitecture
 {
-    public class GameEventDescriptionOption
+    public class GameEventGlobalOption
     {
         public static string fontSize = "GameEventDescription_FontSize";
 

@@ -8,11 +8,6 @@ namespace BKK.GameEventArchitecture
     {
         private readonly HashSet<BaseGameEventListener> listeners = new HashSet<BaseGameEventListener>();
 
-// #if UNITY_EDITOR
-//         [HideInInspector]
-//         public string description;
-// #endif
-
         /// <summary>
         /// 게임 이벤트에 등록된 모든 게임 이벤트 리스너의 유니티 이벤트들을 호출합니다.
         /// </summary>
@@ -38,13 +33,23 @@ namespace BKK.GameEventArchitecture
         /// 게임 이벤트 리스너를 등록합니다.
         /// </summary>
         /// <param name="listener">등록할 게임 이벤트 리스너</param>
-        public override void Register(BaseGameEventListener listener) => listeners.Add(listener);
+        public override void Register(BaseGameEventListener listener)
+        {
+            if (listeners.Contains(listener)) return;
+            
+            listeners.Add(listener);
+        }
 
         /// <summary>
         /// 게임 이벤트 리스너를 해지합니다.
         /// </summary>
         /// <param name="listener">해지할 게임 이벤트 리스너</param>
-        public override void Deregister(BaseGameEventListener listener) => listeners.Remove(listener);
+        public override void Deregister(BaseGameEventListener listener)
+        {
+            if (!listeners.Contains(listener)) return;
+            
+            listeners.Remove(listener);
+        }
 
         /// <summary>
         /// 게임 이벤트에 등록된 게임 이벤트 리스너가 있는지 체크합니다.
@@ -59,13 +64,6 @@ namespace BKK.GameEventArchitecture
     public class GameEvent<T> : BaseGameEvent<T>
     {
         private readonly HashSet<BaseGameEventListener<T>> listeners = new HashSet<BaseGameEventListener<T>>();
-
-// #if UNITY_EDITOR
-//         [HideInInspector]
-//         public string description;
-//
-//         [SerializeField] protected T debugValue = default;
-// #endif
 
         /// <summary>
         /// 게임 이벤트에 등록된 모든 게임 이벤트 리스너의 유니티 이벤트들을 호출합니다.

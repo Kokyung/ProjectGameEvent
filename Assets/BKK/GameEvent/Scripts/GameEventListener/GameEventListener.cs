@@ -44,8 +44,9 @@ namespace BKK.GameEventArchitecture
             {
                 gameEvent.Register(this);
             }
-            catch
+            catch(Exception exception)
             {
+                Debug.LogException(exception);
                 Debug.LogError($"{this.gameObject.name}의 Game Event Listener에 Game Event가 존재하지 않습니다.");
             }
         } 
