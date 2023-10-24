@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace BKK.GameEventArchitecture
 {
-    public sealed class GameEventManagerWindow : SearchableEditorWindow
+    public sealed class GameEventExplorerWindow : SearchableEditorWindow
     {
         private List<GameEventListElement> projectEventList = new List<GameEventListElement>();
         private List<EventListenerBehaviour> listenerList = new List<EventListenerBehaviour>();
@@ -62,8 +62,8 @@ namespace BKK.GameEventArchitecture
 
         private void OnDestroy()
         {
-            PlayerPrefs.SetString("GameEventManager_SearchString", searchString);
-            PlayerPrefs.SetInt("GameEventManager_TabIndex", tabIndex);
+            PlayerPrefs.SetString("GameEventExplorer_SearchString", searchString);
+            PlayerPrefs.SetInt("GameEventExplorer_TabIndex", tabIndex);
             PlayerPrefs.Save();
         }
 
@@ -208,7 +208,7 @@ namespace BKK.GameEventArchitecture
         private void SetSearchField()
         {
             searchField = new SearchField();
-            searchString = PlayerPrefs.GetString("GameEventManager_SearchString");
+            searchString = PlayerPrefs.GetString("GameEventExplorer_SearchString");
             //searchString = string.Empty;
         }
 
@@ -224,7 +224,7 @@ namespace BKK.GameEventArchitecture
 
             columnHeight = EditorGUIUtility.singleLineHeight * 2;
             
-            tabIndex = PlayerPrefs.GetInt("GameEventManager_TabIndex");
+            tabIndex = PlayerPrefs.GetInt("GameEventExplorer_TabIndex");
 
             autoRepaintOnSceneChange = false;// 이걸 True로 하면 매 프레임 작동해서 퍼포먼스 하락합니다.  
         }
@@ -337,14 +337,14 @@ namespace BKK.GameEventArchitecture
             var searchStringWithoutWhiteSpace = searchString.Trim();
             return list.FindAll(e => e.name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
                                      e.GetGameEventAsset().name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
-                                     e.GetGameEventAsset().description.EraseWhiteSpace().Contains(searchStringWithoutWhiteSpace.EraseWhiteSpace(), StringComparison.OrdinalIgnoreCase));
+                                     e.GetGameEventAsset().description.ContainsWords(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase));
         }
         
         private List<GameEventListElement> Search(List<GameEventListElement> list)
         {
             var searchStringWithoutWhiteSpace = searchString.Trim();
             return list.FindAll(e => e.gameEvent.name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) || 
-                                     e.gameEvent.description.EraseWhiteSpace().Contains(searchStringWithoutWhiteSpace.EraseWhiteSpace(), StringComparison.OrdinalIgnoreCase));
+                                     e.gameEvent.description.ContainsWords(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase));
         }
 
         private void OnGUI()
@@ -353,7 +353,7 @@ namespace BKK.GameEventArchitecture
         }
 
         /// <summary>
-        /// 게임 이벤트 매니저 윈도우의 전체 비주얼적인 내용을 표시합니다.
+        /// 게임 이벤트 익스플로러 윈도우의 전체 비주얼적인 내용을 표시합니다.
         /// </summary>
         private void Draw()
         {
@@ -385,7 +385,7 @@ namespace BKK.GameEventArchitecture
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("");
+            GUILayout.Label("  * 커스텀 게임 이벤트에 대한 디버그 값 변경은 해당 게임 이벤트 에셋에서 변경 바랍니다.  ");
             var searchRect = GUILayoutUtility.GetRect(29f, 200f, 18f, 18f, EditorStyles.toolbarSearchField,
                 GUILayout.Width(300), GUILayout.MinWidth(100));
             searchRect.x -= 7;
@@ -642,7 +642,7 @@ namespace BKK.GameEventArchitecture
         }
 
         /// <summary>
-        /// 게임 이벤트 매니저 윈도우의 전체 비주얼적인 내용을 표시해줍니다.
+        /// 게임 이벤트 익스플로 윈도우의 전체 비주얼적인 내용을 표시해줍니다.
         /// </summary>
         private void DrawListInScene(ref List<EventListenerBehaviour> list)
         {
@@ -902,13 +902,13 @@ namespace BKK.GameEventArchitecture
         }
 
         /// <summary>
-        /// 게임 이벤트 매니저 메뉴를 표시합니다.
+        /// 게임 이벤트 익스플로러 메뉴를 표시합니다.
         /// </summary>
-        [MenuItem( "BKK/게임 이벤트/게임 이벤트 매니저",priority = 0)]
+        [MenuItem( "BKK/게임 이벤트/게임 이벤트 익스플로러",priority = 0)]
         public static void ShowWindow()
         {
-            GameEventManagerWindow window = EditorWindow.GetWindow<GameEventManagerWindow>( false, "게임 이벤트 매니저", true );
-            window.titleContent = new GUIContent( "게임 이벤트 매니저" );
+            GameEventExplorerWindow window = EditorWindow.GetWindow<GameEventExplorerWindow>( false, "게임 이벤트 익스플로러", true );
+            window.titleContent = new GUIContent( "게임 이벤트 익스플로러" );
         }
     }
     

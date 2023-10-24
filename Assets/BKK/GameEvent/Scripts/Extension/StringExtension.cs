@@ -11,6 +11,18 @@ namespace BKK.Extension
             return source?.IndexOf(toCheck, comp) >= 0;
         }
 
+        public static bool ContainsWords(this string source, string toCheck, StringComparison comp)
+        {
+            string[] words = toCheck.Split();
+
+            foreach (var word in words)
+            {
+                if (!source.Contains(word, comp)) return false;
+            }
+
+            return true;
+        }
+
         public static string EraseWhiteSpace(this string source)
         {
             return string.Concat(source.Where(c => !char.IsWhiteSpace(c)));
