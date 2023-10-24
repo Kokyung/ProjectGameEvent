@@ -12,7 +12,7 @@ namespace BKK.GameEventArchitecture
     public sealed class GameEventManagerWindow : SearchableEditorWindow
     {
         private List<GameEventListElement> projectEventList = new List<GameEventListElement>();
-        private List<BaseGameEventListener> listenerList = new List<BaseGameEventListener>();
+        private List<EventListenerBehaviour> listenerList = new List<EventListenerBehaviour>();
         
         private Vector2 scrollPos;
 
@@ -305,18 +305,18 @@ namespace BKK.GameEventArchitecture
                     break;
                 case 1:
                     listenerList = sceneColumnHeader.IsSortedAscending(1)
-                        ? listenerList.OrderBy(a => a.gameEvent.name).ToList()
-                        : listenerList.OrderByDescending(a => a.gameEvent.name).ToList();
+                        ? listenerList.OrderBy(a => a.GetGameEventAsset().name).ToList()
+                        : listenerList.OrderByDescending(a => a.GetGameEventAsset().name).ToList();
                     break;
                 case 2:
                     listenerList = sceneColumnHeader.IsSortedAscending(2)
-                        ? listenerList.OrderBy(a => AssetDatabase.GetAssetPath(a.gameEvent)).ToList()
-                        : listenerList.OrderByDescending(a => AssetDatabase.GetAssetPath(a.gameEvent)).ToList();
+                        ? listenerList.OrderBy(a => AssetDatabase.GetAssetPath(a.GetGameEventAsset())).ToList()
+                        : listenerList.OrderByDescending(a => AssetDatabase.GetAssetPath(a.GetGameEventAsset())).ToList();
                     break;
                 case 3:
                     listenerList = sceneColumnHeader.IsSortedAscending(3)
-                        ? listenerList.OrderBy(a => a.gameEvent.description).ToList()
-                        : listenerList.OrderByDescending(a => a.gameEvent.description).ToList();
+                        ? listenerList.OrderBy(a => a.GetGameEventAsset().description).ToList()
+                        : listenerList.OrderByDescending(a => a.GetGameEventAsset().description).ToList();
                     break;
             }
         }
@@ -325,18 +325,19 @@ namespace BKK.GameEventArchitecture
         /// 현재 Scene에 있는 모든 게임 이벤트 리스너를 가져와서 하이러키 순서로 정렬한 뒤 리턴합니다.
         /// </summary>
         /// <returns>현재 Scene에 있는 모든 게임 이벤트 리스너</returns>
-        private static List<BaseGameEventListener> GetAllListenerInScene()
+        private List<EventListenerBehaviour> GetAllListenerInScene()
         {
-            var objList = FindObjectsOfType<BaseGameEventListener>(true).OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
+            var objList = FindObjectsOfType<EventListenerBehaviour>(true).OrderBy(gel=>gel.transform.GetSiblingIndex()).ToArray();
 
-            return objList.Where(gel => gel.gameEvent).ToList();
+            return objList.Where(gel => gel.GetGameEventAsset()).ToList();
         }
 
-        private List<BaseGameEventListener> Search(List<BaseGameEventListener> list)
+        private List<EventListenerBehaviour> Search(List<EventListenerBehaviour> list)
         {
             var searchStringWithoutWhiteSpace = searchString.Trim();
-            return list.FindAll(e => e.gameEvent.name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
-                                     e.gameEvent.description.EraseWhiteSpace().Contains(searchStringWithoutWhiteSpace.EraseWhiteSpace(), StringComparison.OrdinalIgnoreCase));
+            return list.FindAll(e => e.name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
+                                     e.GetGameEventAsset().name.Contains(searchStringWithoutWhiteSpace, StringComparison.OrdinalIgnoreCase) ||
+                                     e.GetGameEventAsset().description.EraseWhiteSpace().Contains(searchStringWithoutWhiteSpace.EraseWhiteSpace(), StringComparison.OrdinalIgnoreCase));
         }
         
         private List<GameEventListElement> Search(List<GameEventListElement> list)
@@ -357,7 +358,7 @@ namespace BKK.GameEventArchitecture
         private void Draw()
         {
             minSize = new Vector2(700, 525);
-            var tempGeListenerList = new List<BaseGameEventListener>();
+            var tempGeListenerList = new List<EventListenerBehaviour>();
             var tempGeList = new List<GameEventListElement>();
             if (searchField.HasFocus())
             {
@@ -460,7 +461,7 @@ namespace BKK.GameEventArchitecture
             {
                 rowRect = new Rect(source: columnRectPrototype);
 
-                rowRect.y += columnHeight * (a + 1);
+                rowRect.y += columnHeight * (a + 1);// 리스트 컬럼 아래에 있어야해서 한칸 더 아래에 그린다.
 
                 EditorGUI.DrawRect(rect: rowRect, color: a % 2 == 0 ? this.darkerColor : this.lighterColor);
 
@@ -643,7 +644,7 @@ namespace BKK.GameEventArchitecture
         /// <summary>
         /// 게임 이벤트 매니저 윈도우의 전체 비주얼적인 내용을 표시해줍니다.
         /// </summary>
-        private void DrawListInScene(ref List<BaseGameEventListener> list)
+        private void DrawListInScene(ref List<EventListenerBehaviour> list)
         {
             var currentEvent = Event.current;
 
@@ -695,7 +696,8 @@ namespace BKK.GameEventArchitecture
             {
                 rowRect = new Rect(source: columnRectPrototype);
 
-                rowRect.y += columnHeight * (a + 1);
+                // BKK TODO: 무슨 이유에서인지 프로젝트 탭 그리는 로직과 동일한데 한칸 위에 그려져서 +2. 원인 찾을 것.
+                rowRect.y += columnHeight * (a + 2);// 리스트 컬럼 아래에 있어야해서 한칸 더 아래에 그린다.
 
                 EditorGUI.DrawRect(rect: rowRect, color: a % 2 == 0 ? this.darkerColor : this.lighterColor);
                 
@@ -714,8 +716,8 @@ namespace BKK.GameEventArchitecture
                     EditorGUI.ObjectField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
                         list[a],
-                        typeof(BaseGameEvent),
-                        false
+                        typeof(EventListenerBehaviour),
+                        true
                     );
                     GUI.enabled = true;
                 }
@@ -735,8 +737,8 @@ namespace BKK.GameEventArchitecture
                     
                     EditorGUI.ObjectField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
-                        list[a].gameEvent,
-                        typeof(BaseGameEvent),
+                        list[a].GetGameEventAsset(),
+                        typeof(GameEventAsset),
                         false
                     );
                     GUI.enabled = true;
@@ -759,7 +761,7 @@ namespace BKK.GameEventArchitecture
                     };
                     EditorGUI.LabelField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
-                        label: new GUIContent(AssetDatabase.GetAssetPath(list[a].gameEvent)),
+                        label: new GUIContent(AssetDatabase.GetAssetPath(list[a].GetGameEventAsset())),
                         style: nameFieldGUIStyle
                     );
 
@@ -780,7 +782,7 @@ namespace BKK.GameEventArchitecture
                         }
                         else if(currentEvent.type == EventType.MouseUp)
                         {
-                            var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(listenerList[a1].gameEvent));
+                            var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(listenerList[a1].GetGameEventAsset()));
                             EditorGUIUtility.PingObject(asset);
                         }
                     }
@@ -804,7 +806,7 @@ namespace BKK.GameEventArchitecture
                     
                     EditorGUI.LabelField(
                         position: this.sceneColumnHeader.GetCellRect(visibleColumnIndex: visibleColumnIndex, columnRect),
-                        label: new GUIContent(list[a].gameEvent.description.Split('\n')[0], list[a].gameEvent.description),
+                        label: new GUIContent(list[a].GetGameEventAsset().description.Split('\n')[0], list[a].GetGameEventAsset().description),
                         style: nameFieldGUIStyle
                     );
                 }
@@ -837,11 +839,25 @@ namespace BKK.GameEventArchitecture
                     
                     if (GUI.Button(button1Rect, "Invoke"))
                     {
-                        list[a].gameEvent.Raise();
+                        if (list[a].GetGameEventAsset() is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
+                        {
+                            gameEvent.Raise();
+                        }
+                        else// 제네릭 타입 게임 이벤트인 경우 메서드 정보를 찾아서 호출
+                        {
+                            ExecuteCustomTypeDebugMethod(list[a].GetGameEventAsset(), "Raise");
+                        }
                     }
                     if (GUI.Button(button2Rect, "Cancel"))
                     {
-                        list[a].gameEvent.Cancel();
+                        if (list[a].GetGameEventAsset() is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
+                        {
+                            gameEvent.Cancel();
+                        }
+                        else// 제네릭 타입 게임 이벤트인 경우 메서드 정보를 찾아서 호출
+                        {
+                            ExecuteCustomTypeDebugMethod(list[a].GetGameEventAsset(), "Cancel");
+                        }
                     }
                     
                     if (!EditorApplication.isPlaying) GUI.enabled = true;

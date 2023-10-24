@@ -130,6 +130,11 @@ namespace BKK.GameEventArchitecture
             Reset();
         }
 
+        public override GameEventAsset GetGameEventAsset()
+        {
+            return gameEvent;
+        }
+
         public override string GetListenerPath()
         {
             return this.GetPath();
@@ -266,6 +271,11 @@ namespace BKK.GameEventArchitecture
             CancelInvoke(nameof(RunEventAsync));
             CancelInvoke(nameof(RunEndEventAsync));
             Reset();
+        }
+
+        public override GameEventAsset GetGameEventAsset()
+        {
+            return gameEvent;
         }
 
         public override string GetListenerPath()

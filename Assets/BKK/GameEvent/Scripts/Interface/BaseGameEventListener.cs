@@ -1,3 +1,4 @@
+using BKK.Extension;
 using UnityEngine;
 
 namespace BKK.GameEventArchitecture
@@ -6,9 +7,7 @@ namespace BKK.GameEventArchitecture
     {
         [Tooltip("등록할 게임 이벤트"), SerializeField]
         public BaseGameEvent gameEvent;
-        
-        public new GameEventAsset GameEventAsset => gameEvent;
-        
+
         public abstract void RaiseEvent();
 
         public abstract void StopEvent();
@@ -19,8 +18,6 @@ namespace BKK.GameEventArchitecture
         [Tooltip("등록할 게임 이벤트"), SerializeField]
         public BaseGameEvent<Ttype> gameEvent;
 
-        public new GameEventAsset GameEventAsset => gameEvent;
-        
         public abstract void RaiseEvent(Ttype value);
 
         public abstract void StopEvent(Ttype value);
@@ -28,6 +25,8 @@ namespace BKK.GameEventArchitecture
 
     public abstract class EventListenerBehaviour : MonoBehaviour
     {
+        public abstract GameEventAsset GetGameEventAsset();
+        
         public abstract string GetListenerPath();
     }
 }
