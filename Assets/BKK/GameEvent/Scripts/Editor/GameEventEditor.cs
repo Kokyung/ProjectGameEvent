@@ -10,16 +10,12 @@ namespace BKK.GameEventArchitecture.Editor
     {
         private GameEvent gameEvent;
 
-        // private GameEventDescriptionOption descriptionOption;
-
         private Vector2 scroll;
 
         private bool locked;
         private void OnEnable()
         {
             gameEvent = (GameEvent) target;
-            
-            // FindDescriptionOption();
         }
 
         public override void OnInspectorGUI()
@@ -29,16 +25,16 @@ namespace BKK.GameEventArchitecture.Editor
                 EditorPrefs.SetBool(GameEventGlobalOption.locked, true);
             }
 
-            EditorGUILayout.LabelField("[ 디버그 기능 ]", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("[ Debug ]", EditorStyles.boldLabel);
 
             if (!EditorApplication.isPlaying) GUI.enabled = false;
             
-            if (GUILayout.Button("실행"))
+            if (GUILayout.Button("Invoke"))
             {
                 gameEvent.Raise();
             }
 
-            if (GUILayout.Button("취소"))
+            if (GUILayout.Button("Cancel"))
             {
                 gameEvent.Cancel();
             }
@@ -47,7 +43,7 @@ namespace BKK.GameEventArchitecture.Editor
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("[ 이벤트 설명 ]", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("[ Description ]", EditorStyles.boldLabel);
             scroll = EditorGUILayout.BeginScrollView(scroll,
                 GUILayout.MaxHeight(EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight) *
                                     EditorGUIUtility.singleLineHeight));
@@ -66,25 +62,25 @@ namespace BKK.GameEventArchitecture.Editor
 
             Undo.RecordObject(gameEvent, "Game Event Description");
 
-            var fontSizeValue = EditorGUILayout.IntField("폰트 사이즈", EditorPrefs.GetInt(GameEventGlobalOption.fontSize));
+            var fontSizeValue = EditorGUILayout.IntField("Font Size", EditorPrefs.GetInt(GameEventGlobalOption.fontSize));
             if (fontSizeValue < 1) fontSizeValue = 1;
             EditorPrefs.SetInt(GameEventGlobalOption.fontSize, fontSizeValue);
             
-            var typingAreaHeightValue = EditorGUILayout.IntField("필드 높이", EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight));
+            var typingAreaHeightValue = EditorGUILayout.IntField("Input Field Height", EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight));
             if (typingAreaHeightValue < 1) typingAreaHeightValue = 1;
             EditorPrefs.SetInt(GameEventGlobalOption.typingAreaHeight, typingAreaHeightValue);
             
             if (EditorApplication.isPlaying) GUI.enabled = false;
             if (EditorPrefs.GetBool(GameEventGlobalOption.locked))
             {
-                if (GUILayout.Button("편집"))
+                if (GUILayout.Button("Edit"))
                 {
                     EditorPrefs.SetBool(GameEventGlobalOption.locked, false);
                 }
             }
             else
             {
-                if (GUILayout.Button("저장"))
+                if (GUILayout.Button("Save"))
                 {
                     EditorPrefs.SetBool(GameEventGlobalOption.locked, true);
                     EditorUtility.SetDirty(gameEvent);
@@ -136,7 +132,7 @@ namespace BKK.GameEventArchitecture.Editor
         private readonly string debugValuePropertyName = "debugValue";
         private readonly string descriptionPropertyName = "description";
 
-        private GUIContent debugValueContent = new GUIContent("디버그 값");
+        private GUIContent debugValueContent = new GUIContent("Deug Value");
         
         private void OnEnable()
         {
@@ -152,20 +148,20 @@ namespace BKK.GameEventArchitecture.Editor
         {
             if (EditorApplication.isPlaying) EditorPrefs.SetBool(GameEventGlobalOption.locked, true);
 
-            EditorGUILayout.LabelField("[ 디버그 기능 ]", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("[ Debug ]", EditorStyles.boldLabel);
 
             if (!EditorApplication.isPlaying) GUI.enabled = false;
 
             EditorGUILayout.PropertyField(_debugValue, debugValueContent, true);
 
-            if (GUILayout.Button("실행"))
+            if (GUILayout.Button("Invoke"))
             {
                 // debug 값은 어떤 타입의 값이든 될 수 있기 때문에 System.Reflection 기능을 활용하여 가져온다.
                 object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
                 MethodExtension.ExecuteMethod(target, _raiseMethod, debugValue);
             }
 
-            if (GUILayout.Button("취소"))
+            if (GUILayout.Button("Cancel"))
             {
                 object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
                 MethodExtension.ExecuteMethod(target, _cancelMethod, debugValue);
@@ -175,7 +171,7 @@ namespace BKK.GameEventArchitecture.Editor
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("[ 이벤트 설명 ]", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("[ Description ]", EditorStyles.boldLabel);
 
             scroll = EditorGUILayout.BeginScrollView(scroll,
                 GUILayout.MaxHeight(EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight) * EditorGUIUtility.singleLineHeight));
@@ -193,25 +189,25 @@ namespace BKK.GameEventArchitecture.Editor
 
             Undo.RecordObject(target, "Game Event Description");
             
-            var fontSizeValue = EditorGUILayout.IntField("폰트 사이즈", EditorPrefs.GetInt(GameEventGlobalOption.fontSize));
+            var fontSizeValue = EditorGUILayout.IntField("Font Size", EditorPrefs.GetInt(GameEventGlobalOption.fontSize));
             if (fontSizeValue < 1) fontSizeValue = 1;
             EditorPrefs.SetInt(GameEventGlobalOption.fontSize, fontSizeValue);
             
-            var typingAreaHeightValue = EditorGUILayout.IntField("필드 높이", EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight));
+            var typingAreaHeightValue = EditorGUILayout.IntField("Input Field Height", EditorPrefs.GetInt(GameEventGlobalOption.typingAreaHeight));
             if (typingAreaHeightValue < 1) typingAreaHeightValue = 1;
             EditorPrefs.SetInt(GameEventGlobalOption.typingAreaHeight, typingAreaHeightValue);
 
             if (EditorApplication.isPlaying) GUI.enabled = false;
             if (EditorPrefs.GetBool(GameEventGlobalOption.locked))
             {
-                if (GUILayout.Button("편집"))
+                if (GUILayout.Button("Edit"))
                 {
                     EditorPrefs.SetBool(GameEventGlobalOption.locked, false);
                 }
             }
             else
             {
-                if (GUILayout.Button("저장"))
+                if (GUILayout.Button("Save"))
                 {
                     EditorPrefs.SetBool(GameEventGlobalOption.locked, true);
                     EditorUtility.SetDirty(target);

@@ -87,7 +87,7 @@ namespace BKK.GameEventArchitecture
             {
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("게임 이벤트 에셋","게임 이벤트 에셋"),
+                    headerContent = new GUIContent("Game Event Asset","Game Event Asset"),
                     width = column0MinWidth,
                     minWidth = column0MinWidth,
                     maxWidth = 400,
@@ -97,7 +97,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("에셋 경로","해당 게임 이벤트 에셋이 위치한 프로젝트 경로"),
+                    headerContent = new GUIContent("Asset Path","Project path when Game Event Asset locate to"),
                     width = column1MinWidth,
                     minWidth = column1MinWidth,
                     maxWidth = 700,
@@ -107,7 +107,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("설명", "해당 게임 이벤트에 대한 설명"),
+                    headerContent = new GUIContent("Description", "Description for Game Event Asset."),
                     width = column2MinWidth,
                     minWidth = column2MinWidth,
                     maxWidth = 500,
@@ -117,7 +117,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("기능", "게임 이벤트 부가 기능들"),
+                    headerContent = new GUIContent("Debug", "Additional Debug Function for Game Event."),
                     width = column4MinWidth,
                     minWidth = column4MinWidth,
                     maxWidth = 300,
@@ -143,7 +143,7 @@ namespace BKK.GameEventArchitecture
             {
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("게임 이벤트 리스너","Scene에 있는 게임 이벤트 리스너"),
+                    headerContent = new GUIContent("Game Event Listener","Game Event Listeners in current scene."),
                     width = column0MinWidth,
                     minWidth = column0MinWidth,
                     maxWidth = 400,
@@ -153,7 +153,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("게임 이벤트 에셋","게임 이벤트 에셋"),
+                    headerContent = new GUIContent("Game Event Asset","Game Event Asset"),
                     width = column0MinWidth,
                     minWidth = column0MinWidth,
                     maxWidth = 400,
@@ -163,7 +163,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("에셋 경로","해당 게임 이벤트 에셋이 위치한 프로젝트 경로"),
+                    headerContent = new GUIContent("Asset Path","Project path when Game Event Asset locate to"),
                     width = column1MinWidth,
                     minWidth = column1MinWidth,
                     maxWidth = 700,
@@ -173,7 +173,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("설명", "해당 게임 이벤트에 대한 설명"),
+                    headerContent = new GUIContent("Description", "Description for Game Event Asset."),
                     width = column2MinWidth,
                     minWidth = column2MinWidth,
                     maxWidth = 500,
@@ -183,7 +183,7 @@ namespace BKK.GameEventArchitecture
                 },
                 new MultiColumnHeaderState.Column()
                 {
-                    headerContent = new GUIContent("기능", "게임 이벤트 부가 기능들"),
+                    headerContent = new GUIContent("Debug", "Additional Debug Function for Game Event."),
                     width = column4MinWidth,
                     minWidth = column4MinWidth,
                     maxWidth = 300,
@@ -385,7 +385,7 @@ namespace BKK.GameEventArchitecture
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("  * 커스텀 게임 이벤트에 대한 디버그 값 변경은 해당 게임 이벤트 에셋에서 변경 바랍니다.  ");
+            GUILayout.Label("  * If you want change debug value, Go to target Game Event Asset Inspector.  ");
             var searchRect = GUILayoutUtility.GetRect(29f, 200f, 18f, 18f, EditorStyles.toolbarSearchField,
                 GUILayout.Width(300), GUILayout.MinWidth(100));
             searchRect.x -= 7;
@@ -515,9 +515,9 @@ namespace BKK.GameEventArchitecture
                         {
                             GenericMenu menu = new GenericMenu();
                             var elements = list;
-                            menu.AddItem(new GUIContent("프로젝트 내 경로 복사"), false,
+                            menu.AddItem(new GUIContent("Copy Asset Path"), false,
                                 () => CopyPath(elements[a1].assetPath));
-                            menu.AddItem(new GUIContent("전체 경로 복사"), false,
+                            menu.AddItem(new GUIContent("Copy Full Path"), false,
                                 () => CopyPath(Application.dataPath.Substring(0, Application.dataPath.Length - 6) +
                                                elements[a1].assetPath));
                             menu.ShowAsContext();
@@ -772,9 +772,9 @@ namespace BKK.GameEventArchitecture
                         {
                             GenericMenu menu = new GenericMenu();
                             var listeners = list;
-                            menu.AddItem(new GUIContent("프로젝트 내 경로 복사"), false,
+                            menu.AddItem(new GUIContent("Copy Asset Path"), false,
                                 () => CopyPath(AssetDatabase.GetAssetPath(listeners[a1])));
-                            menu.AddItem(new GUIContent("전체 경로 복사"), false,
+                            menu.AddItem(new GUIContent("Copy Full Path"), false,
                                 () => CopyPath(Application.dataPath.Substring(0, Application.dataPath.Length - 6) +
                                                AssetDatabase.GetAssetPath(listeners[a1])));
                             menu.ShowAsContext();
@@ -904,11 +904,11 @@ namespace BKK.GameEventArchitecture
         /// <summary>
         /// 게임 이벤트 익스플로러 메뉴를 표시합니다.
         /// </summary>
-        [MenuItem( "BKK/게임 이벤트/게임 이벤트 익스플로러",priority = 0)]
+        [MenuItem( "BKK/Game Event/Game Event Explorer",priority = 0)]
         public static void ShowWindow()
         {
-            GameEventExplorerWindow window = EditorWindow.GetWindow<GameEventExplorerWindow>( false, "게임 이벤트 익스플로러", true );
-            window.titleContent = new GUIContent( "게임 이벤트 익스플로러" );
+            GameEventExplorerWindow window = EditorWindow.GetWindow<GameEventExplorerWindow>( false, "Game Event Explorer", true );
+            window.titleContent = new GUIContent( "Game Event Explorer" );
         }
     }
     
