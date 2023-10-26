@@ -6,11 +6,11 @@ namespace BKK.GameEventArchitecture.Editor
 {
     public class GameEventCreator
     {
-        [MenuItem("BKK/게임 이벤트/게임 이벤트 생성기", false, 50)]
+        [MenuItem("BKK/Game Event/Game Event Generator", false, 50)]
         private static void OpenCreateWindow()
         {
             GameEventCreatorWindow window = EditorWindow.GetWindow<GameEventCreatorWindow>(false, "게임 이벤트 생성기", true);
-            window.titleContent = new GUIContent("게임 이벤트 생성기");
+            window.titleContent = new GUIContent("Game Event Generator");
         }
 
         public static void CreateAll(string type, string path, string menuName)
@@ -46,7 +46,7 @@ namespace BKK.GameEventArchitecture.Editor
             if (existScripts.Length == 0)
             {
                 using var outfile = new StreamWriter(filePath);
-                outfile.WriteLine("// 게임 이벤트 생성 메뉴에 의해 생성되었습니다.");
+                outfile.WriteLine("// Created by Game Event Generator.");
                 outfile.WriteLine("using UnityEngine;");
                 
                 if (nameSpace != "UnityEngine" && !string.IsNullOrEmpty(nameSpace))
@@ -74,13 +74,13 @@ namespace BKK.GameEventArchitecture.Editor
                     paths += $"{path}\n";
                 }
 
-                Debug.Log($"{classType} 게임 이벤트 리스너 파일이 이미 존재합니다.: {paths}");
+                Debug.Log($"{classType} Game Event Listener already exists.: {paths}");
                 return;
             }
 
             if (refresh) AssetDatabase.Refresh();
 
-            Debug.Log($"{classType} 게임 이벤트 클래스 생성: {folderPath}");
+            Debug.Log($"{classType} Game Event class generated.: {folderPath}");
         }
 
         private static void CreateGameEventListener(string type, string folderPath, bool refresh = false)
@@ -105,7 +105,7 @@ namespace BKK.GameEventArchitecture.Editor
             if (existScripts.Length == 0)
             {
                 using var outfile = new StreamWriter(filePath);
-                outfile.WriteLine("// 게임 이벤트 생성 메뉴에 의해 생성되었습니다.");
+                outfile.WriteLine("// Created by Game Event Generator.");
                 outfile.WriteLine("using UnityEngine;");
                 outfile.WriteLine("using UnityEngine.Events;");
 
@@ -131,13 +131,13 @@ namespace BKK.GameEventArchitecture.Editor
                     paths += $"{AssetDatabase.GUIDToAssetPath(script)}\n";
                 }
 
-                Debug.Log($"{classType} 게임 이벤트 파일이 이미 존재합니다.: {paths}");
+                Debug.Log($"{classType} Game Event class already exists.: {paths}");
                 return;
             }
 
             if (refresh) AssetDatabase.Refresh();
 
-            Debug.Log($"{classType} 게임 이벤트 리스너 클래스 생성: {folderPath}");
+            Debug.Log($"{classType} Game Event Listener class generated.: {folderPath}");
         }
     }
 }

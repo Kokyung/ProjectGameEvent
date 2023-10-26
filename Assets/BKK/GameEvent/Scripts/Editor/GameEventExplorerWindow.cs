@@ -579,7 +579,7 @@ namespace BKK.GameEventArchitecture
                     );
                     if (!EditorApplication.isPlaying) GUI.enabled = false;
 
-                    if (GUI.Button(button1Rect, "Invoke"))
+                    if (GUI.Button(button1Rect, "Raise"))
                     {
                         if (list[a].gameEvent is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
                         {
@@ -837,7 +837,7 @@ namespace BKK.GameEventArchitecture
                     );
                     if (!EditorApplication.isPlaying) GUI.enabled = false;
                     
-                    if (GUI.Button(button1Rect, "Invoke"))
+                    if (GUI.Button(button1Rect, "Raise"))
                     {
                         if (list[a].GetGameEventAsset() is GameEvent gameEvent)// 일반 게임 이벤트인 경우 바로 호출
                         {

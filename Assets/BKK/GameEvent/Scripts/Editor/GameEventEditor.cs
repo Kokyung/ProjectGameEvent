@@ -29,7 +29,7 @@ namespace BKK.GameEventArchitecture.Editor
 
             if (!EditorApplication.isPlaying) GUI.enabled = false;
             
-            if (GUILayout.Button("Invoke"))
+            if (GUILayout.Button("Raise"))
             {
                 gameEvent.Raise();
             }
@@ -154,7 +154,7 @@ namespace BKK.GameEventArchitecture.Editor
 
             EditorGUILayout.PropertyField(_debugValue, debugValueContent, true);
 
-            if (GUILayout.Button("Invoke"))
+            if (GUILayout.Button("Raise"))
             {
                 // debug 값은 어떤 타입의 값이든 될 수 있기 때문에 System.Reflection 기능을 활용하여 가져온다.
                 object debugValue = EditorExtension.GetFieldValue(_debugValue, debugValuePropertyName);
