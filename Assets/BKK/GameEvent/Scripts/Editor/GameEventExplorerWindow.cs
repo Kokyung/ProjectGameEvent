@@ -34,7 +34,7 @@ namespace BKK.GameEventArchitecture
 
         private int tabIndex = 0;
 
-        private string[] tabStrings = {"Project", "Scene"};
+        private string[] tabStrings = {"Scene", "Project"};
 
         private float columnHeight;
 
@@ -397,10 +397,10 @@ namespace BKK.GameEventArchitecture
             switch (tabIndex)
             {
                 case 0:
-                    DrawListInProject(ref tempGeList);
+                    DrawListInScene(ref tempGeListenerList);
                     break;
                 case 1:
-                    DrawListInScene(ref tempGeListenerList);
+                    DrawListInProject(ref tempGeList);
                     break;
             }
             EditorGUILayout.EndVertical();
