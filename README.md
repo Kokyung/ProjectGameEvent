@@ -27,11 +27,24 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
 
 ## 부가 기능
 
+* Debug 기능 및 설명 작성 기능
+
+  ![3](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/0ec53df9-2982-493c-acd7-29acbfebc981)
+
+  * Project 내에 있는 Game Event Asset의 Inspector에서 바로 이벤트 호출 가능
+  * 각각의 Game Event 설명을 Inspector에서 작성 가능
+
 * Game Event Explorer
+
+  ![1](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/01a54e95-0ff1-45b4-9d8a-cc19197ef542)
+  
   * Game Event 에셋이 많아졌을때 관리용으로 제작
   * **위치: 에디터 상단 메뉴 BKK/Game Event/Game Event Explorer**
 
 * Game Event Generator
+
+  ![2](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/8725afa3-7e1b-4e85-9886-3aaa9c71e0f9)
+  
   * 커스텀 타입을 파라미터로 갖는 게임이벤트를 생성할때 사용
   * 해당 윈도우 없이 GameEvent<> 클래스를 상속 받아서 직접 작성하는 것도 가능.
   * **위치: 에디터 상단 메뉴 BKK/Game Event/Game Event Generator**
