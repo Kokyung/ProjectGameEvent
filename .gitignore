@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 # IntelliJ Relative
 /.idea
+
+# Mac Relative
+.DS_Store
