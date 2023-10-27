@@ -28,7 +28,7 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
 ## 부가 기능
 
 * Game Event Explorer
-  * 사용시 Game Event 에셋이 많아졌을때 관리용으로 제작
+  * Game Event 에셋이 많아졌을때 관리용으로 제작
   * **위치: 에디터 상단 메뉴 BKK/Game Event/Game Event Explorer**
 
 * Game Event Generator
