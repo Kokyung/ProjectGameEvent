@@ -27,6 +27,7 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
 
 ## 부가 기능
 
+
 * Debug 기능 및 설명 작성 기능
 
   ![3](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/0ec53df9-2982-493c-acd7-29acbfebc981)
@@ -40,6 +41,12 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
   
   * Game Event 에셋이 많아졌을때 관리용으로 제작
   * **위치: 에디터 상단 메뉴 BKK/Game Event/Game Event Explorer**
+ 
+* Asset Tracking 
+
+  ![4](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/e7b2912e-27a5-4838-8f84-e47efbb6e97a)
+
+  * 해당 Game Event Listener의 Game Event AssetDL 어느 컴포넌트에서 사용중인지 추적 가능.
 
 * Game Event Generator
 
