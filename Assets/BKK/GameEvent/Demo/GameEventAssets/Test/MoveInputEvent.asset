@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58e589606fa1cf44e9d8bd19fc1b6d8c, type: 3}
   m_Name: MoveInputEvent
   m_EditorClassIdentifier: 
-  description: "\uC774\uB3D9 \uC785\uB825"
+  description: Movement Input(Vector2)
   debugValue: {x: 0, y: 0}

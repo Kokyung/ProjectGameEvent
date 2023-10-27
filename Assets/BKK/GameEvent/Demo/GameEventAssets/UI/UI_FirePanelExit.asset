@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100ec3be56934b24e964c91c2826c5cb, type: 3}
   m_Name: UI_FirePanelExit
   m_EditorClassIdentifier: 
-  description: "UI \uD328\uB110 \uB2EB\uAE30 \uC774\uBCA4\uD2B8"
+  description: Close UI Panel

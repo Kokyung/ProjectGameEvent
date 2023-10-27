@@ -137,7 +137,7 @@ namespace BKK.GameEventArchitecture.Editor
 
         public void FileBrowser(ref string currentPath, string panelTitle)
         {
-            string folderPath = EditorUtility.SaveFolderPanel("Select save folder.", Application.dataPath, "");
+            string folderPath = EditorUtility.SaveFolderPanel(panelTitle, Application.dataPath, "");
 
             if (string.IsNullOrEmpty(folderPath)) return;
 

@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100ec3be56934b24e964c91c2826c5cb, type: 3}
   m_Name: Fire!
   m_EditorClassIdentifier: 
-  description: "\uD3ED\uC8FD \uBC1C\uC0AC \uC774\uBCA4\uD2B8 \uBCC0\uACE0\uACBD"
+  description: 'Event for when Player firing weapon.
+
+
+    Fire! Fire!! Fire!!!'

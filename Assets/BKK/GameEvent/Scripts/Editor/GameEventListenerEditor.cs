@@ -4,21 +4,77 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using Object = UnityEngine.Object;
 
 namespace BKK.GameEventArchitecture.Editor
 {
     [CustomEditor(typeof(GameEventListener))]
     public class GameEventListenerEditor : BaseGameEventListenerEditor
     {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.BeginHorizontal();
+            
+            // Game Event Listener의 GameEvent 에셋 타입을 System.Reflection 기능으로 찾는다.
+            gameEventType = target.GetType().GetProperty("GameEvent")?.PropertyType;
+
+            if (gameEventType == null)
+            {
+                EditorGUILayout.PropertyField(mGameEvent);
+            }
+            else
+            {
+                mGameEvent.objectReferenceValue =
+                    EditorGUILayout.ObjectField("Game Event", mGameEvent.objectReferenceValue, gameEventType, false);
+            }
+            
+            if (mGameEvent.objectReferenceValue == null)
+            {
+                if (GUILayout.Button(createButtonText))
+                {
+                    string folderPath = EditorUtility.SaveFilePanel(savePanelTitle, Application.dataPath, defaultCreateAssetName, "asset");
+
+                    if (string.IsNullOrEmpty(folderPath)) return;
+
+                    string relativePath = "Assets" + folderPath.Substring(Application.dataPath.Length);
+                    
+                    ScriptableObject instance = CreateInstance(typeof(GameEvent));
+
+                    AssetDatabase.CreateAsset(instance, relativePath);
+
+                    GameEvent asset = AssetDatabase.LoadAssetAtPath<GameEvent>(relativePath);
+
+                    mGameEvent.objectReferenceValue = asset;
+
+                    Debug.Log($"Game Event Asset Created!: {relativePath}");
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.PropertyField(mOnStart);
+            EditorGUILayout.PropertyField(mOnEnd);
+            EditorGUILayout.PropertyField(mOnCancel);
+            EditorGUILayout.PropertyField(mRestartDelay);
+            EditorGUILayout.PropertyField(mStartTiming);
+            EditorGUILayout.PropertyField(mEndTiming);
+            
+            serializedObject.ApplyModifiedProperties();
+
+            // base.OnInspectorGUI();
+        }
+
         private void OnSceneGUI()
         {
             var listener = target as GameEventListener; 
             
             var listenerGameEventValue = target.GetType().GetField("gameEvent").GetValue(listener) as ScriptableObject;
+
+            if (listenerGameEventValue == null) return;
+            
             var listenerGameEventType = listenerGameEventValue.GetType();
-            
-            if(listenerGameEventValue == null) return;
-            
+
             var listenerGameEventName = listenerGameEventValue.ToString();
             
             var targetType = target.GetType();
@@ -66,6 +122,60 @@ namespace BKK.GameEventArchitecture.Editor
     [CustomEditor(typeof(GameEventListener<,,>),true)]
     public class CustomTypeGameEventListenerEditor : BaseGameEventListenerEditor
     {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.BeginHorizontal();
+            
+            // Game Event Listener의 GameEvent 에셋 타입을 System.Reflection 기능으로 찾는다.
+            gameEventType = target.GetType().GetProperty("GameEvent")?.PropertyType;
+
+            if (gameEventType == null)
+            {
+                EditorGUILayout.PropertyField(mGameEvent);
+            }
+            else
+            {
+                mGameEvent.objectReferenceValue =
+                    EditorGUILayout.ObjectField("Game Event", mGameEvent.objectReferenceValue, gameEventType, false);
+            }
+
+            if (mGameEvent.objectReferenceValue == null)
+            {
+                if (GUILayout.Button(createButtonText))
+                {
+                    string folderPath = EditorUtility.SaveFilePanel(savePanelTitle, Application.dataPath, defaultCreateAssetName, "asset");
+
+                    if (string.IsNullOrEmpty(folderPath)) return;
+
+                    string relativePath = "Assets" + folderPath.Substring(Application.dataPath.Length);
+
+                    ScriptableObject instance = CreateInstance(gameEventType);
+                    
+                    AssetDatabase.CreateAsset(instance, relativePath);
+                    
+                    Object asset = AssetDatabase.LoadAssetAtPath(relativePath, gameEventType);
+                    
+                    mGameEvent.objectReferenceValue = asset;
+                    
+                    Debug.Log($"{gameEventType.Name} Asset Created!: {relativePath}");
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.PropertyField(mOnStart);
+            EditorGUILayout.PropertyField(mOnEnd);
+            EditorGUILayout.PropertyField(mOnCancel);
+            EditorGUILayout.PropertyField(mRestartDelay);
+            EditorGUILayout.PropertyField(mStartTiming);
+            EditorGUILayout.PropertyField(mEndTiming);
+            
+            serializedObject.ApplyModifiedProperties();
+
+            // base.OnInspectorGUI();
+        }
+        
         private void OnSceneGUI()
         {
             var listener = target as MonoBehaviour;
@@ -123,15 +233,35 @@ namespace BKK.GameEventArchitecture.Editor
 
     public class BaseGameEventListenerEditor : UnityEditor.Editor
     {
-        private SerializedProperty mRestartDelay;
+        protected Type gameEventType;
+        
+        protected SerializedProperty mGameEvent;
+        protected SerializedProperty mOnStart;
+        protected SerializedProperty mOnEnd;
+        protected SerializedProperty mOnCancel;
+        protected SerializedProperty mRestartDelay;
+        protected SerializedProperty mStartTiming;
+        protected SerializedProperty mEndTiming;
+
+        protected readonly string defaultCreateAssetName = "New Game Event";
+        protected readonly string savePanelTitle = "Save Game Event.";
+        protected readonly string createButtonText = "Create";
+        
         private SerializedProperty mStartDelayed;
-        private SerializedProperty mStartTiming;
 
         private float RestartTimeCheck = 0;
         private float startDelayTimeCheck = 0;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
+            mGameEvent = serializedObject.FindProperty("gameEvent");
+            mOnStart = serializedObject.FindProperty("onStart");
+            mOnEnd = serializedObject.FindProperty("onEnd");
+            mOnCancel = serializedObject.FindProperty("onCancel");
+            mRestartDelay = serializedObject.FindProperty("restartDelay");
+            mStartTiming = serializedObject.FindProperty("startTiming");
+            mEndTiming = serializedObject.FindProperty("endTiming");
+            
             mRestartDelay = serializedObject.FindProperty("restartDelay");
             mStartDelayed = serializedObject.FindProperty("startDelayed");
             mStartTiming = serializedObject.FindProperty("startTiming");
@@ -189,8 +319,8 @@ namespace BKK.GameEventArchitecture.Editor
     public static class GameEventEditorUtility
     {
         public static readonly Color lineColor = Color.green;
-        public static readonly Color gameObjectNameColor = Color.gray;
-        public static readonly Color listenerColor = Color.gray;
+        public static readonly Color gameObjectNameColor = new Color(0.15f,0.15f,0.15f);
+        public static readonly Color listenerColor = new Color(0.15f,0.15f,0.15f);
         public static readonly Color dotColor = Color.red;
 
         public static readonly GUIStyle GameEventStyle = new GUIStyle

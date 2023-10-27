@@ -9,7 +9,7 @@ namespace BKK.GameEventArchitecture.Editor
         [MenuItem("BKK/Game Event/Game Event Generator", false, 50)]
         private static void OpenCreateWindow()
         {
-            GameEventCreatorWindow window = EditorWindow.GetWindow<GameEventCreatorWindow>(false, "게임 이벤트 생성기", true);
+            GameEventCreatorWindow window = EditorWindow.GetWindow<GameEventCreatorWindow>(false, "Game Event Generator", true);
             window.titleContent = new GUIContent("Game Event Generator");
         }
 
