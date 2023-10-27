@@ -21,7 +21,7 @@ Game Event Architecture는 그러한 이슈를 해결하는 방법입니다.
 
 Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴포넌트를 통해 등록하고
 
-이벤트 호출은 Game Event Scriptable Object를 참조하여 GameEvent.Raise()를 호출하므로서 수행됩니다.
+이벤트 호출은 Game Event Scriptable Object를 참조하여 GameEvent.Raise를 호출하므로서 수행됩니다.
 
 프로젝트에 포함된 데모는 종속성 분리 관점에서 기존 방식과 Game Event의 차이를 설명합니다.
 
@@ -33,7 +33,7 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
 
 * Game Event Generator
   * 커스텀 타입을 파라미터로 갖는 게임이벤트를 생성할때 사용
-  * 해당 윈도우를 없이 GameEvent<> 클래스를 상속 받아서 직접 작성하는 것도 가능.
+  * 해당 윈도우 없이 GameEvent<> 클래스를 상속 받아서 직접 작성하는 것도 가능.
   * **위치: 에디터 상단 메뉴 BKK/Game Event/Game Event Generator**
 
 ## * 앞으로 할 것
