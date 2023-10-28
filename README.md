@@ -46,7 +46,7 @@ Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴�
 
   ![4](https://github.com/Kokyung/ProjectGameEvent/assets/43735316/e7b2912e-27a5-4838-8f84-e47efbb6e97a)
 
-  * 해당 Game Event Listener의 Game Event AssetDL 어느 컴포넌트에서 사용중인지 추적 가능.
+  * 해당 Game Event Listener의 Game Event Asset이 어느 컴포넌트에서 사용중인지 추적 가능.
 
 * Game Event Generator
 
