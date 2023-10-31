@@ -1,5 +1,5 @@
 # Project GameEvent
-게임이벤트 구조 사용성 개선 작업
+Unity Engine용 게임이벤트 구조 사용성 개선 작업
 
 ## 핵심 아이디어의 시작
 - https://www.youtube.com/watch?v=lgA8KirhLEU
