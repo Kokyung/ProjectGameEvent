@@ -19,6 +19,10 @@ Game Event Architecture는 그러한 이슈를 해결하는 방법입니다.
 
 **Game Event는 이벤트 등록과 호출 주체를 Scriptable Object가 되어 수행함으로서 종속성을 분리시킵니다.**
 
+**Game Event는 Observer 패턴을 활용합니다.** 
+
+Observer 패턴은 객체의 상태변화를 관찰하는 Observer(관찰자)들을 하나의 객체에 등록하고 그 객체가 상태 변화가 있을때 옵저버들에게 통지하는 패턴을 말합니다.
+
 Game Event Scriptable Object에 등록할 이벤트는 Game Event Listener 컴포넌트를 통해 등록하고
 
 이벤트 호출은 Game Event Scriptable Object를 참조하여 GameEvent.Raise를 호출하므로서 수행됩니다.
